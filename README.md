@@ -1,7 +1,7 @@
 # Team-Gemini
 ## SoftUni JavaScript Basics
 
-*Team members:*
+**Team members:**
 + Desislava Petkova
 + Dimitar Marinov
 + Ivaylo Zgurov
