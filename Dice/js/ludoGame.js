@@ -374,7 +374,7 @@ function randomNum() {
     }
     if (num != 6&&DontHaveOtherFree()) {
         var bad = document.getElementById('badtext');
-        bad.innerText = "Unfortunatlly you stuck";
+        bad.innerText = "Sorry!";
         window.setTimeout(changePlayer, 1000);
         clicked = false;
     }
