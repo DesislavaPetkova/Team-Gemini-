@@ -6,14 +6,17 @@
 	<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-	<div id="playGround" style="display:none;">
+	<div id="playGround" style="display: none">
+
+			<canvas id="dice" onclick="randomNum()"></canvas>
+			<h4 id="uselesstext1">Go </h4><h3 id="player" style="float:left; color:red">red</h3><h4 id="uselesstext2"></h4>
+    		<p id="badtext"></p>
+
 	    <div id="main">
 	        <canvas id="gameboard"></canvas>
-	        <canvas id="playboard"></canvas>
-	        <canvas id="dice"></canvas>
+	        <canvas id="playboard"></canvas>	        
 	    </div>
 	    <div id="buttondiv" style="margin-top:0; padding-top:0;">
-
 	    </div>
 	    <div style="display:none;">
 	        // за пионките

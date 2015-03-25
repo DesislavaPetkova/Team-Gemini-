@@ -51,7 +51,9 @@ function initPlayGround() {
         upcanvas.setAttribute('style', styleString);
     }
     var canvasStyle = {
+        /* bottom border
         'border': '1px solid grey'
+        */
     };
 
     upcanvas.setStyle(canvasStyle);
@@ -66,6 +68,35 @@ function initPlayGround() {
 function drawTheBoard() {
     refreshBoard();
     drawSkyGradient();
+	//star top left
+	drawAirPort(tileWidth * 3.3, tileWidth * 3.3, 6, tileWidth * 2.3, tileWidth *1.3,'#FFCC00','#FDEE00');
+	
+	drawAirPort(tileWidth * 2.7, tileWidth * 2.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#FDEE00');
+	drawAirPort(tileWidth * 3.8, tileWidth * 2.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#FDEE00');
+	drawAirPort(tileWidth * 2.7, tileWidth * 3.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#FDEE00');
+	drawAirPort(tileWidth * 3.8, tileWidth * 3.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#FDEE00');
+	//star  top right
+	drawAirPort(tileWidth * 12.7, tileWidth * 3.3, 6, tileWidth * 2.3, tileWidth *1.3,'#FF0000','#AF002A');
+	
+	drawAirPort(tileWidth * 12.1, tileWidth * 2.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#AF002A');
+	drawAirPort(tileWidth * 13.2, tileWidth * 2.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#AF002A');
+	drawAirPort(tileWidth * 12.1, tileWidth * 3.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#AF002A');
+	drawAirPort(tileWidth * 13.2, tileWidth * 3.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#AF002A');
+	//star down left
+	drawAirPort(tileWidth * 3.3, tileWidth * 12.7, 6, tileWidth * 2.3, tileWidth *1.3,'#9696FF','#21ABCD');
+	
+	drawAirPort(tileWidth * 2.7, tileWidth * 12.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#21ABCD');
+	drawAirPort(tileWidth * 2.7, tileWidth * 13.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#21ABCD');
+	drawAirPort(tileWidth * 3.8, tileWidth * 12.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#21ABCD');
+	drawAirPort(tileWidth * 3.8, tileWidth * 13.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#21ABCD');
+	//star dowm right
+	drawAirPort(tileWidth * 12.7, tileWidth * 12.7, 6, tileWidth * 2.3, tileWidth *1.3,'#33B433','#008000');
+	
+	drawAirPort(tileWidth * 12.1, tileWidth * 12.1, 10, tileWidth * 0.3, tileWidth *0.3,'white','#008000');
+	drawAirPort(tileWidth * 13.2, tileWidth * 13.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#008000');
+	drawAirPort(tileWidth * 12.1, tileWidth * 13.2, 10, tileWidth * 0.3, tileWidth *0.3,'white','#008000');
+	drawAirPort(tileWidth * 13.2, tileWidth * 12.1, 10, tileWidth * 0.3, tileWidth *0.3,'white','#008000');
+	
     var boardmap = createMap();
     for (var x = 0; x < 15; x++) {
         for (var y = 0; y < 15; y++) {
@@ -311,6 +342,187 @@ function drawArrow(direction, width) {
     }
     return imgData;
 }
+
+function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,bordercolor) {
+     var rot = Math.PI / 2 * 3;
+    var x = cx;
+    var y = cy;
+    var step = Math.PI / spikes;
+
+    ctx.strokeSyle = "#000";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius)
+    for (i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+    }
+    ctx.lineTo(cx, cy - outerRadius)
+    ctx.closePath();
+    ctx.lineWidth=10;
+    ctx.strokeStyle=bordercolor;
+    ctx.stroke();
+    ctx.fillStyle=innercolor;
+    ctx.fill();
+    
+}
+
+// dice move, click...
+var clicked = false;
+var pawnOut = {red:0,blue:0,green:0,yellow:0}
+function Stuck() {
+    var text = document.getElementById('player');
+    if (onboard[currpawn] == 0||currPos+num>44) {
+        if (DontHaveOtherFree()||currPos+num>44) {
+            var badtext = document.getElementById('badtext');
+            badtext.innerText = "Unfortunatlly you stuck";
+            clicked = false;
+            var dice = document.getElementById('dice');
+            dice.style.backgroundImage = "url(Images/dice.gif)";
+            window.setTimeout(changePlayer, 1000);
+        }
+    }
+}
+function changePlayer() {
+    if (num != 6){
+    var text = document.getElementById('player');
+    switch (text.innerText) {
+        case "red": text.innerText = text.style.color = "blue"; break;
+        case "blue": text.innerText = text.style.color = "yellow"; break;
+        case "yellow": text.innerText = text.style.color = "green"; break;
+        case "green": text.innerText = text.style.color = "red"; break;
+    }
+    }
+    var badtext = document.getElementById('badtext');
+    badtext.innerText = "";
+    var dice = document.getElementById('dice');
+    dice.style.backgroundImage = "url(Images/dice.gif)";
+}
+var positions = {
+    redpawn1: 0, redpawn2: 0, redpawn3: 0, redpawn4: 0,
+    bluepawn1: 0, bluepawn2: 0, bluepawn3: 0, bluepawn4: 0,
+    greenpawn1: 0, greenpawn2: 0, greenpawn3: 0, greenpawn4: 0,
+    yellowpawn1: 0, yellowpawn2: 0, yellowpawn3: 0, yellowpawn4: 0
+};
+var onboard = {
+    redpawn1: 0, redpawn2: 0, redpawn3: 0, redpawn4: 0,
+    bluepawn1: 0, bluepawn2: 0, bluepawn3: 0, bluepawn4: 0,
+    greenpawn1: 0, greenpawn2: 0, greenpawn3: 0, greenpawn4: 0,
+    yellowpawn1: 0, yellowpawn2: 0, yellowpawn3: 0, yellowpawn4: 0
+};
+function DontHaveOtherFree() {
+    var text = document.getElementById('player');
+    for (var i = 1; i <=4; i++) {
+        if (onboard[text.innerText + "pawn" + i] == 1 || positions[text.innerText + "pawn" + i]+num>=44) return false;
+    }
+    return true;
+}
+function randomNum() {
+    if (!clicked) {
+        num = Math.floor((Math.random() * 6) + 1);;
+        var dice = document.getElementById('dice');
+        dice.style.backgroundImage = "url(Images/" + num + ".jpg)";
+        clicked = true;
+    }
+    if (num != 6&&DontHaveOtherFree()) {
+        var bad = document.getElementById('badtext');
+        bad.innerText = "Sorry!";
+        window.setTimeout(changePlayer, 1000);
+        clicked = false;
+    }
+}
+function randomMove(Color, paw) {
+    var text = document.getElementById('player');
+    NumOfPaw = paw;
+    currcolor = Color;
+    currpawn = currcolor + "pawn" + NumOfPaw;
+    currPos = positions[currpawn];
+    if (num + currPos > 44) {
+        Stuck();
+    }
+    else {
+        if (clicked) {
+            var position = currPos;
+            if (text.innerText == currcolor) {
+                if (onboard[currpawn] === 1 || num === 6) {
+                    if (onboard[currpawn] === 0) {
+                        var doc = document.getElementById(currpawn);
+                        var curr = Number(doc.style.left.replace(/[a-z]/g, ''));
+                        switch (Color) {
+                            case "red":
+                                doc.style.left = 318 + 'px';
+                                doc.style.top = 28 + "px";
+                                break;
+
+                            case "yellow":
+                                doc.style.left = 219 + 'px';
+                                doc.style.top = 523 + "px";
+                                break;
+
+                            case "blue":
+                                doc.style.left = 516 + 'px';
+                                doc.style.top = 325 + "px";
+                                break;
+
+                            case "green":
+                                doc.style.left = 21 + 'px';
+                                doc.style.top = 226 + "px";
+                                break;
+                        }
+                        onboard[currpawn] = 1;
+                    }
+                    else {
+                        switch (Color) {
+                            case "red":
+                                for (i = currPos; i < position + num; i++) {
+                                    stepsRed[i]();
+                                }
+                                break;
+
+                            case "yellow":
+                                for (i = currPos; i < position + num; i++) {
+                                    stepsYellow[i]();
+                                }
+                                break;
+
+                            case "blue":
+                                for (i = currPos; i < position + num; i++) {
+                                    stepsBlue[i]();
+                                }
+                                break;
+
+                            case "green":
+                                for (i = currPos; i < position + num; i++) {
+                                    stepsGreen[i]();
+                                }
+                                break;
+                        }
+                        positions[currpawn] = currPos;
+                        var victim = HaveHover();
+                        if (victim != false) {
+                            ResetPawn(victim);
+                        }
+                        if (currPos == 44) { pawnOut[currcolor]++; onboard[currpawn] = 0; positions[currpawn] = 0; document.getElementById(currpawn).style.visibility = "hidden"; };
+                        CheckForWinner();
+                        changePlayer();
+                    }
+                    num = 0;
+                    clicked = false;
+                    var dice = document.getElementById('dice');
+                    dice.style.backgroundImage = "url(Images/dice.gif)";
+                }
+                else Stuck();
+            }
+        }
+    }
+}
+
 
 
 
