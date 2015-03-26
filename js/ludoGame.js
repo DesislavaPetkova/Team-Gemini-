@@ -157,7 +157,9 @@ function refreshBoard() {
     upctx.canvas.height = canvasWidth;
     tileWidth = Math.ceil(canvasWidth / 16);
     dicectx.canvas.width = tileWidth * 4;
-    dicectx.canvas.height = tileWidth * 6;
+    // original row before I change it. //mitko
+    // dicectx.canvas.height = tileWidth * 6;  
+    dicectx.canvas.height = tileWidth * 4;
     document.getElementById("buttondiv").style.left = tileWidth * 2 + "px";
     document.getElementById("buttondiv").style.top = tileWidth * 7.5 + "px";
 }

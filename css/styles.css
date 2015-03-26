@@ -1,30 +1,73 @@
-body {
+html, body {
+    top:0;
     padding: 0;
     margin: 0 auto;
-    overflow-y: hidden;
-    background-color: #0D0D0D;
+}
+body{
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../img/bg.jpg);    
 }
 
 #playGround {
-    background-color: white;
-}
-div #main {
-    /* background-color: khaki; */
+    display: flex;
     margin: 0 auto;
+    width: 890px;
+    justify-content: center;
+    align-items: stretch;
+    background-color: gray;
+    border-top:solid 5px rgb(47, 47, 47);
+    border-bottom: solid 5px rgb(47, 47, 47);
+    border-left:solid 8px rgb(47, 47, 47);
+    border-right:solid 8px rgb(47, 47, 47);
+    box-sizing: border-box;
+}
+#playboard{
+    display: none;
+}
+div#main {
+    /* background-color: khaki; */
+    /*margin: 0 auto;*/
     /*padding: 0; */
 }
-
+div#side{
+    /*width: 220px;*/
+    border-left: solid 7px rgb(47, 47, 47);
+    background-color: grey;
+}
+div#dice-section{
+    display: flex;
+    flex-direction: column;   
+}
 #dice {
-	background-image: url(../images/dice.gif);
-	background-size: contain;
-	background-repeat: no-repeat;
-	width: 150px;
-	height: 150px; 
-	float: left;
+    background-image: url(../images/dice.gif);
+    background-size: contain;
+    background-repeat: no-repeat;
+/*  width: 150px;
+    height: 150px;
+    float: left; */
+    max-width: 100%;
 }
-#player {
+div#dice-section canvas{
+    padding: 4px 4px 1px 4px;
+    border-radius: 26px;
+    margin: 5px;
+    width: 93%;
+}
+#dice-section > p{
+    color: white;
+    text-align: center;
+    margin: 0.5em 0;
+}
+#dice-section #player {
     color: red;
+    font-weight: bold;
 }
+#buttondiv{
+    margin-top:0;
+    padding-top:0;
+}
+
+
+
 
 
 

@@ -7,19 +7,25 @@
 </head>
 <body>
 	<div id="playGround" style="display: none">
-
-			<canvas id="dice" onclick="randomNum()"></canvas>
-			<p><!-- Go --></p><p id="player"><!-- red --></p>	
-    		<p id="badtext"></p>
-
+		<!-- gameboard section -->
 	    <div id="main">
 	        <canvas id="gameboard"></canvas>
 	        <canvas id="playboard"></canvas>	        
 	    </div>
-	    <div id="buttondiv" style="margin-top:0; padding-top:0;">
-	    </div>
-	    <div style="display:none;">
-	        // за пионките
+	    <!-- controls section -->
+	    <div id="side">
+		    <div id="dice-section">
+				<canvas id="dice" onclick="randomNum()"></canvas>
+				<p>Go</p>
+				<p id="player">red</p>	
+	    		<p id="badtext"></p>
+			</div>
+		    <div id="buttondiv">
+				<!-- button -->
+		    </div>
+		    <div style="display:none;">
+		        // за пионките
+		    </div>
 	    </div>
 	</div>
 	<script type="text/javascript" src="js/ludoGame.js"></script>
