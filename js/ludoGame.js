@@ -118,6 +118,10 @@ function drawTheBoard() {
                 case 60: ctx.putImageData(drawTwoColorTile("yb", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 70: ctx.putImageData(drawTwoColorTile("rg", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 80: ctx.putImageData(drawTwoColorTile("gb", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 90: ctx.putImageData(drawTwoColorTilewithCircle("ry", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 91: ctx.putImageData(drawTwoColorTilewithCircle("yb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 92: ctx.putImageData(drawTwoColorTilewithCircle("rg", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 93: ctx.putImageData(drawTwoColorTilewithCircle("gb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 default: break;
             }
         }
@@ -132,11 +136,11 @@ function createMap() {
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
-    mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 90, 3, 30, 3, 92, 0, 0, 0, 0, 0]);
     mapxy.push([4, 4, 4, 4, 4, 4, 5, 3, 7, 2, 2, 2, 2, 2, 2]);
     mapxy.push([4, 20, 20, 20, 20, 20, 4, 9, 2, 40, 40, 40, 40, 40, 2]);
     mapxy.push([4, 4, 4, 4, 4, 4, 6, 1, 8, 2, 2, 2, 2, 2, 2]);
-    mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 91, 1, 10, 1, 93, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
@@ -193,6 +197,7 @@ function drawARegularTile(color, width) {
             imgData.data[pos++] = colorA;
         }
     }
+
     return imgData;
 }
 function drawTwoColorTile(color, width, keepColorSequence) {
@@ -200,6 +205,21 @@ function drawTwoColorTile(color, width, keepColorSequence) {
     var pos = 0;
     for (var x = 0; x < width; x++) {
         for (var y = 0; y < width; y++) {
+            var x2 = x - Math.ceil(width / 2);
+            var y2 = y - Math.ceil(width / 2);
+            var distance = Math.ceil(Math.sqrt(x2 * x2 + y2 * y2));
+            var circlewall = Math.ceil(width / 2 * 0.8);
+            var circleWidth = Math.ceil(width / 20);
+            ys = new Array();
+            for (var j = 0; j < circleWidth; j++) {
+                ys.push(y - Math.ceil(circleWidth / 2 * 0.9) - +circleWidth + j);
+            }
+            if ((circlewall - circleWidth) < distance && distance < circlewall) {
+                setColor("white");
+            }
+            else {
+                setColor(color);
+            }
             if (x < width - y) {
                 switch (color) {
                     case "yb": keepColorSequence ? setColor("yellow") : setColor("blue"); break;
@@ -227,6 +247,7 @@ function drawTwoColorTile(color, width, keepColorSequence) {
                     case "gb": keepColorSequence ? setColor("blue") : setColor("green"); break;
                     default: break;
                 }
+
             }
             imgData.data[pos++] = colorR;
             imgData.data[pos++] = colorG;
@@ -235,6 +256,63 @@ function drawTwoColorTile(color, width, keepColorSequence) {
         }
     }
     return imgData;
+}
+function drawTwoColorTilewithCircle(color, width, keepColorSequence) {
+
+        var imgData = ctx.createImageData(width, width);
+        var pos = 0;
+        for (var x = 0; x < width; x++) {
+            for (var y = 0; y < width; y++) {
+                var x2 = x - Math.ceil(width / 2);
+                var y2 = y - Math.ceil(width / 2);
+                var distance = Math.ceil(Math.sqrt(x2 * x2 + y2 * y2));
+                var circlewall = Math.ceil(width / 2 * 0.8);
+                var circleWidth = Math.ceil(width / 20);
+                ys = new Array();
+                for (var j = 0; j < circleWidth; j++) {
+                    ys.push(y - Math.ceil(circleWidth / 2 * 0.9) - +circleWidth + j);
+                }
+                if ((circlewall - circleWidth) < distance && distance < circlewall) {
+                    setColor("white");
+                }
+                else {
+                    if (x < width - y) {
+                        switch (color) {
+                            case "yb": keepColorSequence ? setColor("yellow") : setColor("blue"); break;
+                            case "rg": keepColorSequence ? setColor("red") : setColor("green"); break;
+                            default: break;
+                        }
+                    }
+                    else {
+                        switch (color) {
+                            case "yb": keepColorSequence ? setColor("blue") : setColor("yellow"); break;
+                            case "rg": keepColorSequence ? setColor("green") : setColor("red"); break;
+                            default: break;
+                        }
+                    }
+                    if (x < y) {
+                        switch (color) {
+                            case "ry": keepColorSequence ? setColor("red") : setColor("yellow"); break;
+                            case "gb": keepColorSequence ? setColor("green") : setColor("blue"); break;
+                            default: break;
+                        }
+                    }
+                    else {
+                        switch (color) {
+                            case "ry": keepColorSequence ? setColor("yellow") : setColor("red"); break;
+                            case "gb": keepColorSequence ? setColor("blue") : setColor("green"); break;
+                            default: break;
+                        }
+                    }
+                }
+
+                imgData.data[pos++] = colorR;
+                imgData.data[pos++] = colorG;
+                imgData.data[pos++] = colorB;
+                imgData.data[pos++] = colorA;
+            }
+        }
+        return imgData;
 }
 function drawCenterTile(width) {
     var imgData = ctx.createImageData(width, width);
