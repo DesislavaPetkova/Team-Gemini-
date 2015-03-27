@@ -4,13 +4,13 @@ html, body {
     margin: 0 auto;
 }
 body{
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);    
+    /*background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);    */
 }
 
 #playGround {
     display: flex;
     margin: 0 auto;
-    width: 890px;
+    /*width: 890px;*/
     justify-content: center;
     align-items: stretch;
     background-color: gray;
@@ -19,17 +19,27 @@ body{
     border-left: solid 8px rgb(47, 47, 47);
     border-right: solid 8px rgb(47, 47, 47);
     box-sizing: border-box;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);
+    min-width: 505px;
 }
 #playboard {
     position: absolute;
     margin: 0;
     padding: 0;
-    box-sizing: padding-box;
+    box-sizing: border-box;
+    max-width: 76% !important;
+}
+#gameboard{
+    max-height: 100%;
+    max-width: 100%;
 }
 div#main {
     /* background-color: khaki; */
     /*margin: 0 auto;*/
     /*padding: 0; */
+    background-color: gray;
+    min-height: 400px;
+    min-width: 400px;
 }
 div#side {
     /*width: 220px;*/
@@ -38,6 +48,7 @@ div#side {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-width: 100px;
 }
 div#dice-section {
     display: flex;
