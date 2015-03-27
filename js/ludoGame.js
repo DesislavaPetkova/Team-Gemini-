@@ -23,7 +23,7 @@ function initPlayGround() {
     document.getElementById("playGround").style.display = "";
     maindiv = document.getElementById("main");
     //GAMEBOARD->PLAYBOARD
-    canvas = document.getElementById("playboard");
+    canvas = document.getElementById("gameboard");
     ctx = canvas.getContext("2d");
 
     ctx.font = "20px helvetica";
