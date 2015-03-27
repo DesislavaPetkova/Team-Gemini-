@@ -36,7 +36,8 @@ function initPlayGround() {
     }
     var canvasStyle = {
         'background': '#9966CC',
-        'border': '1px solid grey'
+        'border': '1px solid grey',
+		'z-index':'0'
     };
     canvas.setStyle(canvasStyle);
 
@@ -51,24 +52,22 @@ function initPlayGround() {
         upcanvas.setAttribute('style', styleString);
     }
     var canvasStyle = {
-        /* bottom border
-        'border': '1px solid grey'
-        */
+        'border': '1px solid grey',		
+		'z-index':'999'	
     };
 
     upcanvas.setStyle(canvasStyle);
     dicecanvas = document.getElementById("dice");
     dicectx = dicecanvas.getContext("2d");
     drawTheBoard();
-    placeDefaultPlanes("red");
-    placeDefaultPlanes("yellow");
-    placeDefaultPlanes("blue");
-    placeDefaultPlanes("green");
+    placeDefaultPlayers("red");
+    placeDefaultPlayers("yellow");
+    placeDefaultPlayers("blue");
+    placeDefaultPlayers("green");
 }
 function drawTheBoard() {
     refreshBoard();
-    drawSkyGradient();
-	//star top left
+   	//star top left
 	drawAirPort(tileWidth * 3.3, tileWidth * 3.3, 6, tileWidth * 2.3, tileWidth *1.3,'#FFCC00','#FDEE00');
 	
 	drawAirPort(tileWidth * 2.7, tileWidth * 2.8, 10, tileWidth * 0.3, tileWidth *0.3,'white','#FDEE00');
@@ -167,13 +166,7 @@ function resizeboard() {
     refreshBoard();
     drawTheBoard();
 }
-function drawSkyGradient() {
 
-    var skyGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
-    skyGradient.addColorStop(0,'grey');
-    ctx.fillStyle = skyGradient;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-}
 function drawARegularTile(color, width) {
     var imgData = ctx.createImageData(width, width);
     var pos = 0;
@@ -373,4 +366,28 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
     ctx.fillStyle=innercolor;
     ctx.fill();
     
+}
+
+function placeDefaultPlayers(color) {
+ 
+    var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 3.5]; 
+    var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 11.5, 0.5]; 
+    var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.05, 11.5]; 
+    var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 3.5, 14.5]; 
+    var currentpos = null; 
+    var i_role = null;
+ 
+    switch (color) { 
+        case "red": currentpos = redposes; i_role = 0; break; 
+        case "yellow": currentpos = yellowposes; i_role = 1; break; 
+        case "blue": currentpos = blueposes; i_role = 2; break; 
+        case "green": currentpos = greenposes; i_role = 3; break; 
+        default: break; 
+    }
+ 
+    var currentplayer = color + "player";  
+	var img = document.getElementById(currentplayer);	
+    for (var i = 0; i < 8; i++) { 
+        upctx.drawImage(img, tileWidth * currentpos[i], tileWidth * currentpos[++i], tileWidth, tileWidth); 
+    } 
 }

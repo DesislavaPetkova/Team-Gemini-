@@ -21,7 +21,10 @@ body{
     box-sizing: border-box;
 }
 #playboard{
-    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    box-sizing: padding-box;
 }
 div#main {
     /* background-color: khaki; */
