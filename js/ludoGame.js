@@ -22,7 +22,8 @@ function init() {
 function initPlayGround() {
     document.getElementById("playGround").style.display = "";
     maindiv = document.getElementById("main");
-    canvas = document.getElementById("gameboard");
+    //GAMEBOARD->PLAYBOARD
+    canvas = document.getElementById("playboard");
     ctx = canvas.getContext("2d");
 
     ctx.font = "20px helvetica";
@@ -34,11 +35,12 @@ function initPlayGround() {
         }
         canvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'background': '#808080',
-        'border': '1px solid grey',
-		'z-index':'0'
-    };
+    var canvasStyle;
+  //    = {
+  //       'background': '#808080',
+  //       'border': '1px solid grey',
+		// 'z-index':'0'
+  //   };
     canvas.setStyle(canvasStyle);
 
     upcanvas = document.getElementById("playboard");
@@ -51,10 +53,11 @@ function initPlayGround() {
         }
         upcanvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'border': '1px solid grey',		
-		'z-index':'999'	
-    };
+    var canvasStyle;
+  //    = {
+  //       'border': '1px solid grey',		
+		// 'z-index':'999'	
+  //   };
 
     upcanvas.setStyle(canvasStyle);
     dicecanvas = document.getElementById("dice");
