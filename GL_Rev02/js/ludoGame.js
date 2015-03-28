@@ -16,7 +16,7 @@ arrPoses.push(yellowposes);
 arrPoses.push(redposes);
 arrPoses.push(greenposes);
 arrPoses.push(blueposes);
-var homeTiles = [45,03,31,17];
+var homeTiles = [45,03,17,31];
 
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2;
@@ -423,7 +423,7 @@ function placePawns(posX,posY){
 	}
 	
 	
-	if (posX && posY){
+	if (posX && posY){		
 		var rect = upcanvas.getBoundingClientRect();
 		// console.log('posX ' + posX)
 		// console.log('posY ' + posY)
@@ -445,17 +445,18 @@ function placePawns(posX,posY){
 			// if (it.status.home) allowToMove = true;
 		// });
 		if(playerInQuestion){
-			if((diceValue === 6) && (playerInQuestion.status.home)){				
+			if((diceValue === 6) && (playerInQuestion.status.home)){
+			
 					playerInQuestion.x = arrPoses[currPlayer][8] * tileWidth;					
 					playerInQuestion.y = arrPoses[currPlayer][9] * tileWidth;
 					console.log('pyrva 6-ca' + playerInQuestion)
 					playerInQuestion.tile =	homeTiles[currPlayer];
 					playerInQuestion.status.home = false;				
-					// for(var arrIndex in allPlayersArr[currPlayer]){
-						// if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
-							// allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
-						// }
-					// }					
+					for(var arrIndex in allPlayersArr[currPlayer]){
+						if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+							allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+						}
+					}					
 					console.log('tile ' + playerInQuestion.tile)					
 			} else {
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
@@ -471,15 +472,25 @@ function placePawns(posX,posY){
 							console.log('nt coord ' + coordOfNT)
 							var a = playerInQuestion.x;
 							var b = playerInQuestion.y;	
+							// var c = (coordOfNT[1]-coordOfCT[1])* tileWidth;
+							// var d = (coordOfNT[0]-coordOfCT[0])* tileWidth;
 							var c = (coordOfNT[1]-coordOfCT[1])* tileWidth;
-							var d = (coordOfNT[0]-coordOfCT[0])* tileWidth;
-							playerInQuestion.x += (coordOfNT[1]-coordOfCT[1])* tileWidth;
-							playerInQuestion.y += (coordOfNT[0]-coordOfCT[0])* tileWidth;
-							// for(var arrIndex in allPlayersArr[currPlayer]){
-								// if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
-									// allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
-								// }
+							var d =(coordOfNT[0]-coordOfCT[0])* tileWidth;
+							// switch(currPlayer){
+								// case 0:{c = (coordOfNT[1]-coordOfCT[1])* tileWidth; d =(coordOfNT[0]-coordOfCT[0])* tileWidth;}; break;
+								// case 1:{c = (coordOfNT[1]-coordOfCT[1])* tileWidth; d =(coordOfNT[0]-coordOfCT[0])* tileWidth;}; break;
+								// case 2:{c = (coordOfNT[0]-coordOfCT[0])* tileWidth; d =(coordOfCT[1]-coordOfNT[1])* tileWidth;}; break;
+								// case 3:{c = -(coordOfNT[0]-coordOfCT[0])* tileWidth; d =-(coordOfCT[1]-coordOfNT[1])* tileWidth;}; break;
 							// }
+							playerInQuestion.x += c;
+							playerInQuestion.y += d;
+							// playerInQuestion.x += (coordOfNT[1]-coordOfCT[1])* tileWidth;
+							// playerInQuestion.y += (coordOfNT[0]-coordOfCT[0])* tileWidth;
+							for(var arrIndex in allPlayersArr[currPlayer]){
+								if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+									allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+								}
+							}
 							console.log(playerInQuestion);
 							playerInQuestion.tile =	nextTile;	
 							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
@@ -510,8 +521,7 @@ function placePawns(posX,posY){
 	} 
 	
 	function tick(){
-		upctx.clearRect(0, 0, canvas.width, canvas.height);
-		console.log(allPlayersArr);
+		upctx.clearRect(0, 0, canvas.width, canvas.height);		
 		allPlayersArr.forEach(function(colorArray){
 			colorArray.forEach(function (play){
 				play.update();				
@@ -612,8 +622,10 @@ function initiatepawnRouts() {
 		for(tileIndex = 80; tileIndex<=85; tileIndex++){
 			rout.push(tileIndex);
 		}
-		return rout;
+		
+		return rout;		
 	})();
+	console.log(blueRout + 'blue rout');
 
 	var greenRout = (function () {
 		var rout = [];
@@ -648,7 +660,7 @@ function randomNum() {
         var num = Math.floor((Math.random() * 6) + 1);		
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-		diceInfoHolder = [num, playerIndex];		
+		diceInfoHolder = [num, playerIndex];			
 		if(num!==6){
 			var canWeMove = false;
 			allPlayersArr[playerIndex].forEach(function (player){
