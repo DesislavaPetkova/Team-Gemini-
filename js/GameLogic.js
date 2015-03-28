@@ -97,10 +97,10 @@ var playStatus = (function () {
             overLimit: 0,
             touchBaseCount: 0,
             win: false,
-            pulls: []
+            pawns: []
         };
         for (var j = 0; j < 4; j++) {
-            var pull = {
+            var pawn = {
                 previousValue: -1,
                 value: -1,
                 pos: {
@@ -110,9 +110,11 @@ var playStatus = (function () {
                     bottom: -1
                 }
             };
-            role.pulls.push(pull);
+            role.pawns.push(pawn);
         }
         s.push(role);
     }
     return s;
 })();
+
+

@@ -6,9 +6,9 @@ var initialPawnPlacement = true;
 
 var tileWidth = 0;
 var allPlayersArr = []
-var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 6.5]; 
-var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 8.5, 0.5]; 
-var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.5, 8.5]; 
+var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 6.5];
+var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 8.5, 0.5];
+var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.5, 8.5];
 var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 6.5, 14.5];
 
 function initPawns(color,yellowposes){
@@ -21,11 +21,11 @@ function initPawns(color,yellowposes){
 }
 
 function placePawns(){
-	canvasWidth = window.innerHeight - 10;   
+	canvasWidth = window.innerHeight - 10;
 	tileWidth = Math.ceil(canvasWidth / 16);
-	if(initialPawnPlacement){		
+	if(initialPawnPlacement){
 		initialPawnPlacement=!initialPawnPlacement;
-		//yellow index ->0, red index ->1, green index ->2, blue index ->3		
+		//yellow index ->0, red index ->1, green index ->2, blue index ->3
 		var yellowPlayers = initPawns('yellow',yellowposes);
 		allPlayersArr.push(yellowPlayers);
 		var redPlayers = initPawns('red',redposes);
@@ -34,7 +34,7 @@ function placePawns(){
 		allPlayersArr.push(greenposes);
 		var bluePlayers = initPawns('blue',blueposes);
 		allPlayersArr.push(bluePlayers);
-		var mapxy = createValueMap();		
+		var mapxy = createValueMap();
 	} else {
 	console.log(mPosX);
 	console.log(mPoxY);
@@ -49,14 +49,16 @@ function placePawns(){
 	function update(){
 		this.t = tick();
 		//this.render(upctx);
-		//requestAnumationFrame(update);
+		//requestAnimationFrame(update);
 	} 
 	
 	function tick(){
+        upctx.clearRect(0, 0, canvas.width, canvas.height);
 		allPlayersArr.forEach(function(colorArray){
 			colorArray.forEach(function (play){
 				play.update();
 				upctx.drawImage(document.getElementById(play.img),play.position.x, play.position.y, play.width, play.height);
+
 			});			
 		});
 	}

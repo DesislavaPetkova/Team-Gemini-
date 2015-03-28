@@ -1,4 +1,4 @@
-
+var playhand = { role: null, color: null, value: null }, diceValue = 0, handcount = 0, tempindex = 0;
 window.onload = init;
 window.onresize = resizeboard;
 var maindiv;
@@ -448,27 +448,51 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
     ctx.fill();
     
 }
+function placeDefaultPlayers(color, pawnindex, atTheDoor) {
 
-function placeDefaultPlayers(color) {
- 
-    var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 3.5]; 
-    var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 11.5, 0.5]; 
-    var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.05, 11.5]; 
-    var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 3.5, 14.5]; 
-    var currentpos = null; 
+    var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 3.5];
+    var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 11.5, 0.5];
+    var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.05, 11.5];
+    var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 3.5, 14.5];
+    var currentpos = null;
     var i_role = null;
- 
-    switch (color) { 
-        case "red": currentpos = redposes; i_role = 0; break; 
-        case "green": currentpos = yellowposes; i_role = 1; break;
-        case "blue": currentpos = blueposes; i_role = 2; break; 
-        case "yellow": currentpos = greenposes; i_role = 3; break;
-        default: break; 
+
+    switch (color) {
+        case "red": currentpos = redposes; i_role = 0; break;
+        case "yellow": currentpos = yellowposes; i_role = 1; break;
+        case "blue": currentpos = blueposes; i_role = 2; break;
+        case "green": currentpos = greenposes; i_role = 3; break;
+        default: break;
     }
- 
-    var currentplayer = color + "player";  
-	var img = document.getElementById(currentplayer);	
-    for (var i = 0; i < 8; i++) { 
-        upctx.drawImage(img, tileWidth * currentpos[i], tileWidth * currentpos[++i], tileWidth, tileWidth); 
-    } 
+    var currentplane = color + "plane";
+    var img = document.getElementById(currentplane);
+    upctx.shadowBlur = 10;
+    upctx.shadowOffsetX = 2;
+    upctx.shadowOffsetY = 2;
+    upctx.shadowColor = "black";
+    if (planeindex != undefined) {//not initiation
+        var tempPosInd = 0;
+        if (atTheDoor == true) {
+            tempPosInd = 8;
+        }
+        else {
+            tempPosInd = planeindex * 2
+        }
+        upctx.drawImage(img, tileWidth * currentpos[tempPosInd], tileWidth * currentpos[tempPosInd + 1], tileWidth, tileWidth);
+        playStatus[i_role].pawns[pawnindex].pos.left = Math.floor(tileWidth * currentpos[tempPosInd]) - 1;
+        playStatus[i_role].pawns[pawnindex].pos.top = Math.floor(tileWidth * currentpos[tempPosInd + 1]) - 1;
+        playStatus[i_role].pawns[pawnindex].pos.right = Math.floor(tileWidth * currentpos[tempPosInd] + tileWidth) + 1;
+        playStatus[i_role].pawns[pawnindex].pos.bottom = Math.floor(tileWidth * currentpos[tempPosInd + 1] + tileWidth) + 1;
+    }
+    else {
+        for (var i = 0; i < 8; i++) {
+            upctx.drawImage(img, tileWidth * currentpos[i], tileWidth * currentpos[++i], tileWidth, tileWidth);
+        }
+        for (var j = 0; j < playStatus[i_role].planes.length; j++) {
+            playStatus[i_role].planes[j].pos.left = Math.floor(tileWidth * currentpos[0 + j * 2]) - 1;
+            playStatus[i_role].planes[j].pos.top = Math.floor(tileWidth * currentpos[1 + j * 2]) - 1;
+            playStatus[i_role].planes[j].pos.right = Math.floor(tileWidth * currentpos[0 + j * 2] + tileWidth) + 1;
+            playStatus[i_role].planes[j].pos.bottom = Math.floor(tileWidth * currentpos[1 + j * 2] + tileWidth) + 1;
+        }
+    }
 }
