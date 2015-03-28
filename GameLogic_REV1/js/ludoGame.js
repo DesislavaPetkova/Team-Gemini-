@@ -405,15 +405,20 @@ function initPawns(color,poses){
 
 function placePawns(posX,posY){	
 	//yellow index ->0, red index ->1, green index ->2, blue index ->3
-	allPlayersArr = [];
-	var yellowPlayers = initPawns('yellow',yellowposes);
-	allPlayersArr.push(yellowPlayers);
-	var redPlayers = initPawns('red',redposes);
-	allPlayersArr.push(redPlayers);
-	var greenPlayers = initPawns('green',greenposes);
-	allPlayersArr.push(greenPlayers);
-	var bluePlayers = initPawns('blue',blueposes);
-	allPlayersArr.push(bluePlayers);
+	if(initialPawnPlacement){
+		initialPawnPlacement!=initialPawnPlacement;
+		allPlayersArr = [];
+		var yellowPlayers = initPawns('yellow',yellowposes);
+		allPlayersArr.push(yellowPlayers);
+		var redPlayers = initPawns('red',redposes);
+		allPlayersArr.push(redPlayers);
+		var greenPlayers = initPawns('green',greenposes);
+		allPlayersArr.push(greenPlayers);
+		var bluePlayers = initPawns('blue',blueposes);
+		allPlayersArr.push(bluePlayers);
+	}
+	
+	
 	if (posX && posY){
 		var rect = upcanvas.getBoundingClientRect();
 		posX = posX-rect.left;        
@@ -422,16 +427,35 @@ function placePawns(posX,posY){
 		var diceValue = diceInfoHolder[0];
 		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY);
 		//allPlayersArr[currPlayer].forEach(movePawn);
+		var allowToMove = false;
+		allPlayersArr[currPlayer].forEach(function (it){
+			if (it.status.home) allowToMove = true;
+		});
 		if(playerInQuestion){
-			if(diceValue === 6){
-				if(playerInQuestion.status.home){
+			if((diceValue === 6) && (playerInQuestion.status.home)){				
 					playerInQuestion.position.x = arrPoses[currPlayer][8] * tileWidth;
 					playerInQuestion.position.y = arrPoses[currPlayer][9] * tileWidth;
 					playerInQuestion.tile =	homeTiles[currPlayer];				
-				} else {
-					
-				}
-			}
+			} else if((diceValue !== 6) && allowToMove){
+					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
+						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);
+						if(routs[currPlayer].indexOf(ini+diceValue)!==-1){
+							var nextTile = routs[currPlayer][ini+diceValue];
+							var currColmn, currRow, nextColmn, nextRow; 
+							var coordOfCT = findCoordinates(playerInQuestion.tile);
+							var coordOfNT = findCoordinates(nextTile);
+							playerInQuestion.position.x = playerInQuestion.position.x + (coordOfCT[0]-coordOfNT[0])* tileWidth;
+							playerInQuestion.position.y = playerInQuestion.position.y + (coordOfCT[1]-coordOfNT[1])* tileWidth;
+							playerInQuestion.tile =	homeTiles[currPlayer];	
+							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
+								playerInQuestion.status.saved = true;
+							}
+						} else {
+							clicked = false;
+						}				
+					}
+			}  else clicked = false;
+		
 		}
 		
 		console.log(playerInQuestion);
@@ -468,6 +492,17 @@ function placePawns(posX,posY){
 	}
 	
 	update();
+}
+
+function findCoordinates(tile){
+	var coordinates = [];
+	for(var colmn in mapxy){
+		var row = mapxy[colmn].indexOf(tile); 
+		if (inde !== -1){
+			coordinates = [colmn,row];
+		}
+	}
+	return coordinates;
 }
 
 function pawnIsClicked(currPlayer, pX, pY){	
@@ -508,7 +543,7 @@ function createValueMap() {
     return mapxy;
 }
 
-var roles = ["red", "yellow", "blue", "green"];
+var roles = ["yellow", "red", "green", "blue"];
 var routs = [];  
 initiatepawnRouts();
 
@@ -579,16 +614,25 @@ var diceInfoHolder =[];
 var playerIndex = 0;
 var clicked = false;
 function randomNum() {
-    if (!clicked) {
-        var num = Math.floor((Math.random() * 6) + 1);
-		num = 6;
+    if (!clicked) {		
+        var num = Math.floor((Math.random() * 6) + 1);		
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-		diceInfoHolder = [num, playerIndex];
+		diceInfoHolder = [num, playerIndex];		
 		if(num!==6){
+			var canWeMove = false;
+			allPlayersArr[playerIndex].forEach(function (player){
+				if(!player.status.home){
+					canWeMove=true;
+				}
+			});
+			document.getElementById('player').innerText = roles[playerIndex];
 			if (playerIndex === 3) playerIndex=0;
 			else playerIndex+=1;
+			clicked = false;
+			return;
 		}
+		document.getElementById('player').innerText = roles[playerIndex];
         clicked = true;		
     }    
 }
