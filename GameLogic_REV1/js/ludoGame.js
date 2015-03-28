@@ -16,6 +16,7 @@ arrPoses.push(yellowposes);
 arrPoses.push(redposes);
 arrPoses.push(greenposes);
 arrPoses.push(blueposes);
+var homeTiles = [45,03,31,17];
 
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2;
@@ -394,10 +395,10 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function initPawns(color,poses){
-	var pawns = [];
+	var pawns = [];		
 	for(var i = 0; i<8; i++){		
 		var pawn = new Player(poses[i]*tileWidth, poses[++i]*tileWidth, color+'player', tileWidth, tileWidth);		
-		pawns.push(pawn);
+		pawns.push(pawn);	
 	}	
 	return pawns;	
 }
@@ -426,6 +427,7 @@ function placePawns(posX,posY){
 				if(playerInQuestion.status.home){
 					playerInQuestion.position.x = arrPoses[currPlayer][8] * tileWidth;
 					playerInQuestion.position.y = arrPoses[currPlayer][9] * tileWidth;
+					playerInQuestion.tile =	homeTiles[currPlayer];				
 				} else {
 					
 				}
@@ -452,11 +454,10 @@ function placePawns(posX,posY){
 	} 
 	
 	function tick(){
-		
+		upctx.clearRect(0, 0, canvas.width, canvas.height);
 		allPlayersArr.forEach(function(colorArray){
 			colorArray.forEach(function (play){
-				play.update();
-				
+				play.update();				
 				upctx.drawImage(document.getElementById(play.img),play.position.x, play.position.y, play.width, play.height);
 			});			
 		});
