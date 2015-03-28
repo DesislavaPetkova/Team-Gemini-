@@ -464,19 +464,19 @@ function placeDefaultPlayers(color, pawnindex, atTheDoor) {
         case "green": currentpos = greenposes; i_role = 3; break;
         default: break;
     }
-    var currentplane = color + "plane";
-    var img = document.getElementById(currentplane);
+    var currentPlayer = color + "player";
+    var img = document.getElementById(currentPlayer);
     upctx.shadowBlur = 10;
     upctx.shadowOffsetX = 2;
     upctx.shadowOffsetY = 2;
     upctx.shadowColor = "black";
-    if (planeindex != undefined) {//not initiation
+    if (pawnindex != undefined) {//not initiation
         var tempPosInd = 0;
         if (atTheDoor == true) {
             tempPosInd = 8;
         }
         else {
-            tempPosInd = planeindex * 2
+            tempPosInd = pawnindex * 2
         }
         upctx.drawImage(img, tileWidth * currentpos[tempPosInd], tileWidth * currentpos[tempPosInd + 1], tileWidth, tileWidth);
         playStatus[i_role].pawns[pawnindex].pos.left = Math.floor(tileWidth * currentpos[tempPosInd]) - 1;
@@ -488,11 +488,11 @@ function placeDefaultPlayers(color, pawnindex, atTheDoor) {
         for (var i = 0; i < 8; i++) {
             upctx.drawImage(img, tileWidth * currentpos[i], tileWidth * currentpos[++i], tileWidth, tileWidth);
         }
-        for (var j = 0; j < playStatus[i_role].planes.length; j++) {
-            playStatus[i_role].planes[j].pos.left = Math.floor(tileWidth * currentpos[0 + j * 2]) - 1;
-            playStatus[i_role].planes[j].pos.top = Math.floor(tileWidth * currentpos[1 + j * 2]) - 1;
-            playStatus[i_role].planes[j].pos.right = Math.floor(tileWidth * currentpos[0 + j * 2] + tileWidth) + 1;
-            playStatus[i_role].planes[j].pos.bottom = Math.floor(tileWidth * currentpos[1 + j * 2] + tileWidth) + 1;
+        for (var j = 0; j < playStatus[i_role].pawns.length; j++) {
+            playStatus[i_role].pawns[j].pos.left = Math.floor(tileWidth * currentpos[0 + j * 2]) - 1;
+            playStatus[i_role].pawns[j].pos.top = Math.floor(tileWidth * currentpos[1 + j * 2]) - 1;
+            playStatus[i_role].pawns[j].pos.right = Math.floor(tileWidth * currentpos[0 + j * 2] + tileWidth) + 1;
+            playStatus[i_role].pawns[j].pos.bottom = Math.floor(tileWidth * currentpos[1 + j * 2] + tileWidth) + 1;
         }
     }
 }

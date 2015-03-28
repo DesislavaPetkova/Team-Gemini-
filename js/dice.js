@@ -5,7 +5,6 @@ var clicked = false;
 function randomNum() {
     if (!clicked) {
         var num = Math.floor((Math.random() * 6) + 1);
-        num = 6;
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
         diceInfoHolder = [num, playerIndex];
