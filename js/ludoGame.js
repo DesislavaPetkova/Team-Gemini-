@@ -460,9 +460,9 @@ function placeDefaultPlayers(color) {
  
     switch (color) { 
         case "red": currentpos = redposes; i_role = 0; break; 
-        case "yellow": currentpos = yellowposes; i_role = 1; break; 
+        case "green": currentpos = yellowposes; i_role = 1; break;
         case "blue": currentpos = blueposes; i_role = 2; break; 
-        case "green": currentpos = greenposes; i_role = 3; break; 
+        case "yellow": currentpos = greenposes; i_role = 3; break;
         default: break; 
     }
  

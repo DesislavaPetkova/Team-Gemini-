@@ -17,10 +17,10 @@ function changePlayer() {
     if (num != 6){
     var text = document.getElementById('player');
         switch (text.innerText) {
-            case "red": text.innerText = text.style.color = "blue"; break;
+            case "red": text.innerText = text.style.color = "green"; break;
+            case "green": text.innerText = text.style.color = "blue"; break;
             case "blue": text.innerText = text.style.color = "yellow"; break;
-            case "yellow": text.innerText = text.style.color = "green"; break;
-            case "green": text.innerText = text.style.color = "red"; break;
+            case "yellow": text.innerText = text.style.color = "blue"; break;
         }
     }
     var badtext = document.getElementById('badtext');
