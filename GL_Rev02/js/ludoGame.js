@@ -1,6 +1,7 @@
 
 window.onload = init;
 window.onresize = resizeboard;
+window.onresize= function refreshBoard(){};
 var maindiv;
 var canvas = null, ctx = null, dicecanvas = null, dicectx = null, upcanvas = null, upctx = null;
 var mousePosX = 0, mousePosY = 0;
