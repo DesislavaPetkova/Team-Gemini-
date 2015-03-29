@@ -20,18 +20,23 @@ body{
     border-right: solid 8px rgb(47, 47, 47);
     box-sizing: border-box;
     background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);
-    min-width: 505px;
+    
 }
 #playboard {
     position: absolute;
     margin: 0;
     padding: 0;
+	display:block;
     box-sizing: border-box;
-    max-width: 76% !important;
+     max-height: 100%;
+    max-width: 100%;
+	z-index:1;
 }
 #gameboard{
     max-height: 100%;
     max-width: 100%;
+	display:block;
+	z-index:-1;
 }
 div#main {
     /* background-color: khaki; */
