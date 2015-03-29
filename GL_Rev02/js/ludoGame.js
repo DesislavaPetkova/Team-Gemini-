@@ -50,11 +50,12 @@ function initPlayGround() {
         }
         canvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'background': '#808080',
-        'border': '1px solid grey',
-		'z-index':'0'
-    };
+    var canvasStyle;
+  //    = {
+  //       'background': '#808080',
+  //       'border': '1px solid grey',
+		// 'z-index':'0'
+  //   };
     canvas.setStyle(canvasStyle);
 
     upcanvas = document.getElementById("playboard");
@@ -67,10 +68,11 @@ function initPlayGround() {
         }
         upcanvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'border': '1px solid grey',		
-		'z-index':'999'	
-    };
+    var canvasStyle
+  //    = {
+  //       'border': '1px solid grey',		
+		// 'z-index':'999'	
+  //   };
 
     upcanvas.setStyle(canvasStyle);
 	upcanvas.addEventListener('click', function(e) {
