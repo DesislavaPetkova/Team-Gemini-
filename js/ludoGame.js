@@ -1,8 +1,24 @@
-var playhand = { role: null, color: null, value: null }, diceValue = 0, handcount = 0, tempindex = 0;
+
 window.onload = init;
 window.onresize = resizeboard;
+
 var maindiv;
 var canvas = null, ctx = null, dicecanvas = null, dicectx = null, upcanvas = null, upctx = null;
+var mousePosX = 0, mousePosY = 0;
+var initialPawnPlacement = true;
+var tileWidth = 0;
+var allPlayersArr = []
+var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 6.5]; 
+var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 8.5, 0.5]; 
+var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.5, 8.5]; 
+var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 6.5, 14.5];
+var arrPoses=[];
+arrPoses.push(yellowposes);
+arrPoses.push(redposes);
+arrPoses.push(greenposes);
+arrPoses.push(blueposes);
+var oldTileWidth = 0;
+var homeTiles = [45,03,17,31];
 
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2;
@@ -18,11 +34,12 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 }
 function init() {
     initPlayGround();
+	
 }
+
 function initPlayGround() {
     document.getElementById("playGround").style.display = "";
     maindiv = document.getElementById("main");
-    //GAMEBOARD->PLAYBOARD
     canvas = document.getElementById("gameboard");
     ctx = canvas.getContext("2d");
 
@@ -35,12 +52,11 @@ function initPlayGround() {
         }
         canvas.setAttribute('style', styleString);
     }
-    var canvasStyle;
-  //    = {
-  //       'background': '#808080',
-  //       'border': '1px solid grey',
-		// 'z-index':'0'
-  //   };
+    var canvasStyle = {
+        'background': '#808080',
+        'border': '1px solid grey',
+		'z-index':'0'
+    };
     canvas.setStyle(canvasStyle);
 
     upcanvas = document.getElementById("playboard");
@@ -53,23 +69,27 @@ function initPlayGround() {
         }
         upcanvas.setAttribute('style', styleString);
     }
-    var canvasStyle;
-  //    = {
-  //       'border': '1px solid grey',		
-		// 'z-index':'999'	
-  //   };
+    var canvasStyle = {
+        'border': '1px solid grey',		
+		'z-index':'999'	
+    };
 
     upcanvas.setStyle(canvasStyle);
+	upcanvas.addEventListener('click', function(e) {
+		e = e || window.event;      		
+		mousePosX=e.clientX;
+		mousePosY = e.clientY;
+		placePawns(mousePosX, mousePosY);
+    }); 
     dicecanvas = document.getElementById("dice");
-    dicectx = dicecanvas.getContext("2d");
-    drawTheBoard();    
+    dicectx = dicecanvas.getContext("2d");	
+	var mapXY = createValueMap();
+    drawTheBoard();  	
 }
-function drawTheBoard() {
-    refreshBoard();
-	placeDefaultPlayers("red");
-    placeDefaultPlayers("yellow");
-    placeDefaultPlayers("blue");
-    placeDefaultPlayers("green");
+
+function drawTheBoard() {	
+	refreshBoard();
+	placePawns();	
    	//star top left
 	drawAirPort(tileWidth * 3.3, tileWidth * 3.3, 6, tileWidth * 2.3, tileWidth *1.3,'#FFCC00','#FDEE00');
 	
@@ -121,10 +141,6 @@ function drawTheBoard() {
                 case 60: ctx.putImageData(drawTwoColorTile("yb", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 70: ctx.putImageData(drawTwoColorTile("rg", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 80: ctx.putImageData(drawTwoColorTile("gb", tileWidth, false), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
-                case 90: ctx.putImageData(drawTwoColorTilewithCircle("ry", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
-                case 91: ctx.putImageData(drawTwoColorTilewithCircle("yb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
-                case 92: ctx.putImageData(drawTwoColorTilewithCircle("rg", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
-                case 93: ctx.putImageData(drawTwoColorTilewithCircle("gb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 default: break;
             }
         }
@@ -139,11 +155,11 @@ function createMap() {
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
-    mapxy.push([0, 0, 0, 0, 0, 90, 3, 30, 3, 92, 0, 0, 0, 0, 0]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 5, 30, 7, 2, 2, 2, 2, 2, 2]);
-    mapxy.push([4, 20, 20, 20, 20, 20, 20, 0, 40, 40, 40, 40, 40, 40, 2]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 6, 10, 8, 2, 2, 2, 2, 2, 2]);
-    mapxy.push([0, 0, 0, 0, 0, 91, 1, 10, 1, 93, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([4, 4, 4, 4, 4, 4, 5, 3, 7, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([4, 20, 20, 20, 20, 20, 4, 9, 2, 40, 40, 40, 40, 40, 2]);
+    mapxy.push([4, 4, 4, 4, 4, 4, 6, 1, 8, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
@@ -152,6 +168,7 @@ function createMap() {
 
     return mapxy;
 }
+
 function refreshBoard() {
     canvasWidth = window.innerHeight - 10;
     canvasHeight = window.innerHeight;
@@ -200,7 +217,6 @@ function drawARegularTile(color, width) {
             imgData.data[pos++] = colorA;
         }
     }
-
     return imgData;
 }
 function drawTwoColorTile(color, width, keepColorSequence) {
@@ -208,21 +224,6 @@ function drawTwoColorTile(color, width, keepColorSequence) {
     var pos = 0;
     for (var x = 0; x < width; x++) {
         for (var y = 0; y < width; y++) {
-            var x2 = x - Math.ceil(width / 2);
-            var y2 = y - Math.ceil(width / 2);
-            var distance = Math.ceil(Math.sqrt(x2 * x2 + y2 * y2));
-            var circlewall = Math.ceil(width / 2 * 0.8);
-            var circleWidth = Math.ceil(width / 20);
-            ys = new Array();
-            for (var j = 0; j < circleWidth; j++) {
-                ys.push(y - Math.ceil(circleWidth / 2 * 0.9) - +circleWidth + j);
-            }
-            if ((circlewall - circleWidth) < distance && distance < circlewall) {
-                setColor("white");
-            }
-            else {
-                setColor(color);
-            }
             if (x < width - y) {
                 switch (color) {
                     case "yb": keepColorSequence ? setColor("yellow") : setColor("blue"); break;
@@ -250,7 +251,6 @@ function drawTwoColorTile(color, width, keepColorSequence) {
                     case "gb": keepColorSequence ? setColor("blue") : setColor("green"); break;
                     default: break;
                 }
-
             }
             imgData.data[pos++] = colorR;
             imgData.data[pos++] = colorG;
@@ -259,63 +259,6 @@ function drawTwoColorTile(color, width, keepColorSequence) {
         }
     }
     return imgData;
-}
-function drawTwoColorTilewithCircle(color, width, keepColorSequence) {
-
-        var imgData = ctx.createImageData(width, width);
-        var pos = 0;
-        for (var x = 0; x < width; x++) {
-            for (var y = 0; y < width; y++) {
-                var x2 = x - Math.ceil(width / 2);
-                var y2 = y - Math.ceil(width / 2);
-                var distance = Math.ceil(Math.sqrt(x2 * x2 + y2 * y2));
-                var circlewall = Math.ceil(width / 2 * 0.8);
-                var circleWidth = Math.ceil(width / 20);
-                ys = new Array();
-                for (var j = 0; j < circleWidth; j++) {
-                    ys.push(y - Math.ceil(circleWidth / 2 * 0.9) - +circleWidth + j);
-                }
-                if ((circlewall - circleWidth) < distance && distance < circlewall) {
-                    setColor("white");
-                }
-                else {
-                    if (x < width - y) {
-                        switch (color) {
-                            case "yb": keepColorSequence ? setColor("yellow") : setColor("blue"); break;
-                            case "rg": keepColorSequence ? setColor("red") : setColor("green"); break;
-                            default: break;
-                        }
-                    }
-                    else {
-                        switch (color) {
-                            case "yb": keepColorSequence ? setColor("blue") : setColor("yellow"); break;
-                            case "rg": keepColorSequence ? setColor("green") : setColor("red"); break;
-                            default: break;
-                        }
-                    }
-                    if (x < y) {
-                        switch (color) {
-                            case "ry": keepColorSequence ? setColor("red") : setColor("yellow"); break;
-                            case "gb": keepColorSequence ? setColor("green") : setColor("blue"); break;
-                            default: break;
-                        }
-                    }
-                    else {
-                        switch (color) {
-                            case "ry": keepColorSequence ? setColor("yellow") : setColor("red"); break;
-                            case "gb": keepColorSequence ? setColor("blue") : setColor("green"); break;
-                            default: break;
-                        }
-                    }
-                }
-
-                imgData.data[pos++] = colorR;
-                imgData.data[pos++] = colorG;
-                imgData.data[pos++] = colorB;
-                imgData.data[pos++] = colorA;
-            }
-        }
-        return imgData;
 }
 function drawCenterTile(width) {
     var imgData = ctx.createImageData(width, width);
@@ -448,51 +391,289 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
     ctx.fill();
     
 }
-function placeDefaultPlayers(color, pawnindex, atTheDoor) {
-
-    var yellowposes = [2.2, 2.2, 3.3, 2.2, 2.2, 3.2, 3.3, 3.2, 0.5, 3.5];
-    var redposes = [11.57, 2.2, 12.65, 2.2, 11.57, 3.2, 12.67, 3.2, 11.5, 0.5];
-    var greenposes = [11.6, 11.6, 12.7, 11.6, 11.6, 12.7, 12.7, 12.7, 14.05, 11.5];
-    var blueposes = [2.2, 11.65, 3.3, 11.65, 2.2, 12.70, 3.3, 12.7, 3.5, 14.5];
-    var currentpos = null;
-    var i_role = null;
-
-    switch (color) {
-        case "red": currentpos = redposes; i_role = 0; break;
-        case "yellow": currentpos = yellowposes; i_role = 1; break;
-        case "blue": currentpos = blueposes; i_role = 2; break;
-        case "green": currentpos = greenposes; i_role = 3; break;
-        default: break;
-    }
-    var currentPlayer = color + "player";
-    var img = document.getElementById(currentPlayer);
-    upctx.shadowBlur = 10;
-    upctx.shadowOffsetX = 2;
-    upctx.shadowOffsetY = 2;
-    upctx.shadowColor = "black";
-    if (pawnindex != undefined) {//not initiation
-        var tempPosInd = 0;
-        if (atTheDoor == true) {
-            tempPosInd = 8;
-        }
-        else {
-            tempPosInd = pawnindex * 2
-        }
-        upctx.drawImage(img, tileWidth * currentpos[tempPosInd], tileWidth * currentpos[tempPosInd + 1], tileWidth, tileWidth);
-        playStatus[i_role].pawns[pawnindex].pos.left = Math.floor(tileWidth * currentpos[tempPosInd]) - 1;
-        playStatus[i_role].pawns[pawnindex].pos.top = Math.floor(tileWidth * currentpos[tempPosInd + 1]) - 1;
-        playStatus[i_role].pawns[pawnindex].pos.right = Math.floor(tileWidth * currentpos[tempPosInd] + tileWidth) + 1;
-        playStatus[i_role].pawns[pawnindex].pos.bottom = Math.floor(tileWidth * currentpos[tempPosInd + 1] + tileWidth) + 1;
-    }
-    else {
-        for (var i = 0; i < 8; i++) {
-            upctx.drawImage(img, tileWidth * currentpos[i], tileWidth * currentpos[++i], tileWidth, tileWidth);
-        }
-        for (var j = 0; j < playStatus[i_role].pawns.length; j++) {
-            playStatus[i_role].pawns[j].pos.left = Math.floor(tileWidth * currentpos[0 + j * 2]) - 1;
-            playStatus[i_role].pawns[j].pos.top = Math.floor(tileWidth * currentpos[1 + j * 2]) - 1;
-            playStatus[i_role].pawns[j].pos.right = Math.floor(tileWidth * currentpos[0 + j * 2] + tileWidth) + 1;
-            playStatus[i_role].pawns[j].pos.bottom = Math.floor(tileWidth * currentpos[1 + j * 2] + tileWidth) + 1;
-        }
-    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function initPawns(color,poses){
+	var pawns = [];
+	var n =0;	
+	for(var i = 0; i<8; i++){		
+		var pawn = new Player(poses[i], poses[++i], tileWidth, color+'player', tileWidth, n);		
+		pawns.push(pawn);
+		n++;		
+	}	
+	return pawns;	
 }
+
+function placePawns(posX,posY){	
+	tileWidth = Math.ceil((window.innerHeight - 10) / 16);
+	//yellow index ->0, red index ->1, green index ->2, blue index ->3
+	if(initialPawnPlacement){	
+		initialPawnPlacement = false;
+		allPlayersArr = [];
+		var yellowPlayers = initPawns('yellow',yellowposes);
+		allPlayersArr.push(yellowPlayers);
+		var redPlayers = initPawns('red',redposes);
+		allPlayersArr.push(redPlayers);
+		var greenPlayers = initPawns('green',greenposes);
+		allPlayersArr.push(greenPlayers);
+		var bluePlayers = initPawns('blue',blueposes);
+		allPlayersArr.push(bluePlayers);		
+	}
+	
+	
+	if (posX && posY){	
+		
+		var rect = upcanvas.getBoundingClientRect();
+		// console.log('posX ' + posX)
+		// console.log('posY ' + posY)
+		posX = posX-rect.left;
+		// console.log('posX ' + posX)
+		// console.log('rect.left ' + rect.left)
+		posY = posY-rect.top;
+		// console.log('posY ' + posY)
+		// console.log('rect.top ' + rect.top)
+		var currPlayer = diceInfoHolder[1];
+		var diceValue = diceInfoHolder[0];
+		// console.log(diceInfoHolder)
+		// console.log(allPlayersArr)
+		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY,tileWidth);
+		console.log(playerInQuestion)
+		//allPlayersArr[currPlayer].forEach(movePawn);
+		//var allowToMove = false;
+		// allPlayersArr[currPlayer].forEach(function (it){
+			// if (it.status.home) allowToMove = true;
+		// });
+		if(playerInQuestion){
+			if((diceValue === 6) && (playerInQuestion.status.home)){
+			
+					playerInQuestion.x = arrPoses[currPlayer][8];					
+					playerInQuestion.y = arrPoses[currPlayer][9];
+					playerInQuestion.width = tileWidth;
+					console.log('pyrva 6-ca' + playerInQuestion)
+					playerInQuestion.tile =	homeTiles[currPlayer];
+					playerInQuestion.status.home = false;				
+					for(var arrIndex in allPlayersArr[currPlayer]){
+						if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+							allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+						}
+					}					
+					console.log('tile ' + playerInQuestion.tile)					
+			} else {
+					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
+						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);
+						console.log('ini ' + ini)
+						if((ini+diceValue)<=routs[currPlayer].length){
+							var nextTile = routs[currPlayer][ini+diceValue];
+							console.log('next tile ' + nextTile)
+							var currColmn, currRow, nextColmn, nextRow; 
+							var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);
+							console.log('ct coord ' + coordOfCT)
+							var coordOfNT = findCoordinates(nextTile, mapXY);
+							console.log('nt coord ' + coordOfNT)														
+							playerInQuestion.x += (coordOfNT[1]-coordOfCT[1]);
+							playerInQuestion.y += (coordOfNT[0]-coordOfCT[0]);
+							playerInQuestion.width = tileWidth;
+							for(var arrIndex in allPlayersArr[currPlayer]){
+								if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+									allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+								}
+							}
+							console.log(playerInQuestion);
+							playerInQuestion.tile =	nextTile;	
+							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
+								playerInQuestion.status.saved = true;
+							}
+						} else {
+							clicked = false;
+						}				
+					} else clicked = false;
+			} 
+		
+		}		
+		clicked = false;	
+	 }	//else {
+		// for(var i1 in allPlayersArr){
+			// for(var j1 in allPlayersArr[i1]){
+				// allPlayersArr[i1][j1].x = (allPlayersArr[i1][j1].x * oldTileWidth;
+				// allPlayersArr[i1][j1].y = (allPlayersArr[i1][j1].y)*oldTileWidth;
+			// }
+		// }
+	// }	
+	
+	
+	// allPlayersArr.forEach(function(colorArray){
+		// colorArray.forEach(function (play){
+			// upctx.drawImage(document.getElementById(play.img),play.x, play.y, play.width, play.height);
+		// });		
+	// });
+	
+	function update(){
+		//this.r = render(upctx);
+		this.t = tick();
+		
+		//requestAnumationFrame(update);
+	} 
+	
+	function tick(){
+		upctx.clearRect(0, 0, canvas.width, canvas.height);		
+		allPlayersArr.forEach(function(colorArray){
+			colorArray.forEach(function (play){
+				play.update();
+var a = 	play.x;
+	var b = 	play.width;		
+				//play = new Player(play.x, play.y,tileWidth,play.img, play.height, play.num);
+				
+				upctx.drawImage(document.getElementById(play.img),play.x*tileWidth, play.y*tileWidth, tileWidth, tileWidth);
+			});			
+		});
+	}
+	
+	function render(upctx){
+		upctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
+	
+	update();
+}
+var mapXY = createValueMap();
+function findCoordinates(tile,mapxy){
+	var coordinates = [];
+	for(var colmn=0; colmn<=14; colmn++){
+		var row = mapxy[colmn].indexOf(tile); 
+		if (row !== -1){
+			coordinates = [colmn,row];
+		}
+	}
+	return coordinates;
+}
+
+function pawnIsClicked(currPlayer, pX, pY,tileWidth){	
+	var p;
+	allPlayersArr[currPlayer].forEach(function (player) {
+		if (pX >= player.x*tileWidth && pX <= player.x*tileWidth + player.width &&
+        pY >= player.y*tileWidth && pY <= player.y*tileWidth + player.height){
+			p = player;							
+		}
+	});
+	return p;
+}
+
+function createValueMap() {
+    var mapxy = [];
+    mapxy.push([00, 00, 00, 00, 00, 00, 01, 02, 03, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 56, 60, 04, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 55, 61, 05, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 54, 62, 06, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 53, 63, 07, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 51, 52, 64, 08, 09, 00, 00, 00, 00, 00]);
+    mapxy.push([45, 46, 47, 48, 49, 50, 00, 65, 00, 10, 11, 12, 13, 14, 15]);
+    mapxy.push([44, 90, 91, 92, 93, 94, 95, 99, 75, 74, 73, 72, 71, 70, 16]);
+    mapxy.push([43, 42, 41, 40, 39, 38, 00, 85, 00, 22, 21, 20, 19, 18, 17]);
+    mapxy.push([00, 00, 00, 00, 00, 37, 36, 84, 24, 23, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 35, 83, 25, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 34, 82, 26, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 33, 81, 27, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 32, 80, 28, 00, 00, 00, 00, 00, 00]);
+    mapxy.push([00, 00, 00, 00, 00, 00, 31, 30, 29, 00, 00, 00, 00, 00, 00]);
+    return mapxy;
+}
+
+var roles = ["yellow", "red", "green", "blue"];
+var routs = [];  
+initiatepawnRouts();
+
+function initiatepawnRouts() {   
+	var redRout = (function () {
+		var rout = [];
+		for(var tileIndex = 03; tileIndex<=56; tileIndex++){
+			rout.push(tileIndex);
+		}
+		rout.push(01);
+		rout.push(02);
+		for(tileIndex = 60; tileIndex<=65; tileIndex++){
+			rout.push(tileIndex);
+		}
+		return rout;
+	})();
+
+	var yellowRout = (function () {
+		var rout = [];
+		for(var tileIndex = 45; tileIndex<=56; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 01; tileIndex<=44; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 90; tileIndex<=95; tileIndex++){
+			rout.push(tileIndex);
+		}
+		return rout;
+	})();
+
+	var blueRout = (function () {
+		var rout = [];
+		for(var tileIndex = 31; tileIndex<=56; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 01; tileIndex<=30; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 80; tileIndex<=85; tileIndex++){
+			rout.push(tileIndex);
+		}
+		
+		return rout;		
+	})();
+	console.log(blueRout + 'blue rout');
+
+	var greenRout = (function () {
+		var rout = [];
+		for(var tileIndex = 17; tileIndex<=56; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 01; tileIndex<=16; tileIndex++){
+			rout.push(tileIndex);
+		}
+		for(tileIndex = 70; tileIndex<=75; tileIndex++){
+			rout.push(tileIndex);
+		}
+		return rout;
+	})();
+	
+    routs.push(yellowRout);
+	//console.log(yellowRout)
+	routs.push(redRout);
+	//console.log(redRout)
+	routs.push(greenRout);
+	//console.log(greenRout)
+    routs.push(blueRout);  
+	//console.log(blueRout)	
+}
+
+////////////////////////////////////////////////////////////////////
+var diceInfoHolder =[];
+var playerIndex = 0;
+var clicked = false;
+function randomNum() {
+    if (!clicked) {		
+        var num = Math.floor((Math.random() * 6) + 1);		
+        var dice = document.getElementById('dice');
+        dice.style.backgroundImage = "url(images/" + num + ".jpg)";
+		diceInfoHolder = [num, playerIndex];			
+		if(num!==6){
+			var canWeMove = false;
+			allPlayersArr[playerIndex].forEach(function (player){
+				if(!player.status.home){
+					canWeMove=true;
+				}
+			});
+			document.getElementById('player').innerText = roles[playerIndex];
+			if (playerIndex === 3) playerIndex=0;
+			else playerIndex+=1;
+			clicked = false;
+			return;
+		}
+		document.getElementById('player').innerText = roles[playerIndex];
+        clicked = true;		
+    }    
+}
+
+
