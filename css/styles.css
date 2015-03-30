@@ -76,7 +76,7 @@ div#dice-section canvas {
     margin: 0.5em 0;
 }
 #dice-section #player {
-    color: red;
+    color: white;
     font-weight: bold;
 }
 #buttondiv {

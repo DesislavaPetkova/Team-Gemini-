@@ -735,6 +735,8 @@ var clicked = false;
 
 function diceRoll()
 {
+    document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
+    document.getElementById('player').style.color = roles[playerIndex];
     document.getElementById("player");
     dice.style.backgroundImage = "url(images/dice.gif)";
     window.onload = diceRoll;
