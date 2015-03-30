@@ -770,7 +770,10 @@ function randomNum() {
         document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
         document.getElementById('player').style.color = roles[playerIndex];
         playersTurn = true;
-        clicked = true;     
+        clicked = true;  
+        if (num !== 6) {
+            clicked = false;
+        }   
     }    
 }
 
