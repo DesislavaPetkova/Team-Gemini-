@@ -733,11 +733,11 @@ var diceInfoHolder =[0,0];
 var playerIndex = 0;
 var clicked = false;
 
-function changePlayer()
+function diceRoll()
 {
     document.getElementById("player");
     dice.style.backgroundImage = "url(images/dice.gif)";
-    window.onload = changePlayer;
+    window.onload = diceRoll;
 }
 
 function randomNum() {
@@ -747,7 +747,7 @@ function randomNum() {
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
         diceInfoHolder = [num, playerIndex];
         if(num !== 6) {
-            window.setTimeout(changePlayer, 1000);
+            window.setTimeout(diceRoll, 1000);
             var canWeMove = false;
             allPlayersArr[playerIndex].forEach(function (player){
                 if(!player.status.home) {
