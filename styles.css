@@ -1,0 +1,6 @@
+BODY {OnMouseOver:this.style.visibility='hidden'; background-color: #000000; color:#0099FF; link:#010101; vlink:#999999; alink:#FFFFFF;}
+a:link {color:#00FFFF;}
+a:visited {color:#0099FF;}
+a:hover {color:#ff00ff;}
+a:active {color:#00ff33;}
+a.change {text-decoration:none; font-size:36;}
