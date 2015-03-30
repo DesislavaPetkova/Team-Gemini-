@@ -4,47 +4,58 @@ html, body {
     margin: 0 auto;
 }
 body{
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../img/bg.jpg);    
+    /*background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);    */
 }
 
 #playGround {
     display: flex;
     margin: 0 auto;
-    width: 890px;
+    /*width: 890px;*/
     justify-content: center;
     align-items: stretch;
     background-color: gray;
-    border-top:solid 5px rgb(47, 47, 47);
+    border-top: solid 5px rgb(47, 47, 47);
     border-bottom: solid 5px rgb(47, 47, 47);
-    border-left:solid 8px rgb(47, 47, 47);
-    border-right:solid 8px rgb(47, 47, 47);
+    border-left: solid 8px rgb(47, 47, 47);
+    border-right: solid 8px rgb(47, 47, 47);
     box-sizing: border-box;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);
+    
 }
-#playboard{
+#playboard {
     position: absolute;
     margin: 0;
     padding: 0;
-    	
+	display:block;
+    box-sizing: border-box;
+     max-height: 100%;
+    max-width: 100%;
+	z-index:1;
 }
-
 #gameboard{
-	background-color:grey;
-	background:grey;
+    max-height: 100%;
+    max-width: 100%;
+	display:block;
+	z-index:-1;
 }
 div#main {
     /* background-color: khaki; */
-    margin: 0 auto;
+    /*margin: 0 auto;*/
     /*padding: 0; */
+    background-color: gray;
+    min-height: 400px;
+    min-width: 400px;
 }
-div#side{
+div#side {
     /*width: 220px;*/
     border-left: solid 7px rgb(47, 47, 47);
-    background-color: grey;
+    background-color: #808080;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-width: 100px;
 }
-div#dice-section{
+div#dice-section {
     display: flex;
     flex-direction: column;   
 }
@@ -57,13 +68,13 @@ div#dice-section{
     float: left; */
     max-width: 100%;
 }
-div#dice-section canvas{
+div#dice-section canvas {
     padding: 4px 4px 1px 4px;
     border-radius: 26px;
     margin: 5px;
     width: 93%;
 }
-#dice-section > p{
+#dice-section > p {
     color: white;
     text-align: center;
     margin: 0.5em 0;
@@ -72,17 +83,17 @@ div#dice-section canvas{
     color: red;
     font-weight: bold;
 }
-#buttondiv{
+#buttondiv {
     margin-top:0;
     padding-top:0;
 }
 
 
-#menu ul{
+#menu ul {
     list-style: none;
     padding: 0;
 }
-#menu ul li{
+#menu ul li {
     width: 80%;
     background-color: rgb(229, 166, 49);
     margin: 10px auto;
@@ -91,13 +102,9 @@ div#dice-section canvas{
     font-size: 1.5em;
     box-shadow: 2px -2px 9px #B0360A;
 }
-#menu a{
+#menu a {
     text-decoration: none;
     color: white;
-}
-
-img {
-	transition: all 2s ease;
 }
 
 

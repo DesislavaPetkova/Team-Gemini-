@@ -1,6 +1,7 @@
 
 window.onload = init;
 window.onresize = resizeboard;
+window.onresize= function refreshBoard(){};
 var maindiv;
 var canvas = null, ctx = null, dicecanvas = null, dicectx = null, upcanvas = null, upctx = null;
 var mousePosX = 0, mousePosY = 0;
@@ -16,7 +17,7 @@ arrPoses.push(yellowposes);
 arrPoses.push(redposes);
 arrPoses.push(greenposes);
 arrPoses.push(blueposes);
-var homeTiles = [45,03,31,17];
+var homeTiles = [45,03,17,31];
 
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2;
@@ -50,11 +51,12 @@ function initPlayGround() {
         }
         canvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'background': '#808080',
-        'border': '1px solid grey',
-		'z-index':'0'
-    };
+    var canvasStyle;
+  //    = {
+  //       'background': '#808080',
+  //       'border': '1px solid grey',
+		// 'z-index':'0'
+  //   };
     canvas.setStyle(canvasStyle);
 
     upcanvas = document.getElementById("playboard");
@@ -67,10 +69,11 @@ function initPlayGround() {
         }
         upcanvas.setAttribute('style', styleString);
     }
-    var canvasStyle = {
-        'border': '1px solid grey',		
-		'z-index':'999'	
-    };
+    var canvasStyle
+  //    = {
+  //       'border': '1px solid grey',		
+		// 'z-index':'999'	
+  //   };
 
     upcanvas.setStyle(canvasStyle);
 	upcanvas.addEventListener('click', function(e) {
@@ -81,6 +84,7 @@ function initPlayGround() {
     }); 
     dicecanvas = document.getElementById("dice");
     dicectx = dicecanvas.getContext("2d");	
+	var mapXY = createValueMap();
     drawTheBoard();  	
 }
 
@@ -157,11 +161,11 @@ function createMap() {
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
-    mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 5, 3, 7, 2, 2, 2, 2, 2, 2]);
-    mapxy.push([4, 20, 20, 20, 20, 20, 4, 9, 2, 40, 40, 40, 40, 40, 2]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 6, 1, 8, 2, 2, 2, 2, 2, 2]);
-    mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 90, 3, 30, 3, 92, 0, 0, 0, 0, 0]);
+    mapxy.push([4, 4, 4, 4, 4, 4, 5, 30, 7, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([4, 20, 20, 20, 20, 20, 20, 0, 40, 40, 40, 40, 40, 40, 2]);
+    mapxy.push([4, 4, 4, 4, 4, 4, 6, 10, 8, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([0, 0, 0, 0, 0, 91, 1, 10, 1, 93, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
@@ -395,18 +399,21 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function initPawns(color,poses){
-	var pawns = [];		
+	var pawns = [];
+	var n =0;	
 	for(var i = 0; i<8; i++){		
-		var pawn = new Player(poses[i]*tileWidth, poses[++i]*tileWidth, color+'player', tileWidth, tileWidth);		
-		pawns.push(pawn);	
+		var pawn = new Player(poses[i]*tileWidth, poses[++i]*tileWidth, color+'player', tileWidth, tileWidth, n);		
+		pawns.push(pawn);
+		n++;		
 	}	
 	return pawns;	
 }
 
 function placePawns(posX,posY){	
+	tileWidth = Math.ceil(canvasWidth / 16);
 	//yellow index ->0, red index ->1, green index ->2, blue index ->3
 	if(initialPawnPlacement){
-		initialPawnPlacement!=initialPawnPlacement;
+		initialPawnPlacement = false;
 		allPlayersArr = [];
 		var yellowPlayers = initPawns('yellow',yellowposes);
 		allPlayersArr.push(yellowPlayers);
@@ -415,58 +422,97 @@ function placePawns(posX,posY){
 		var greenPlayers = initPawns('green',greenposes);
 		allPlayersArr.push(greenPlayers);
 		var bluePlayers = initPawns('blue',blueposes);
-		allPlayersArr.push(bluePlayers);
+		allPlayersArr.push(bluePlayers);		
 	}
 	
 	
-	if (posX && posY){
+	if (posX && posY){		
 		var rect = upcanvas.getBoundingClientRect();
-		posX = posX-rect.left;        
+		// console.log('posX ' + posX)
+		// console.log('posY ' + posY)
+		posX = posX-rect.left;
+		// console.log('posX ' + posX)
+		// console.log('rect.left ' + rect.left)
 		posY = posY-rect.top;
+		// console.log('posY ' + posY)
+		// console.log('rect.top ' + rect.top)
 		var currPlayer = diceInfoHolder[1];
 		var diceValue = diceInfoHolder[0];
+		// console.log(diceInfoHolder)
+		// console.log(allPlayersArr)
 		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY);
+		console.log(playerInQuestion)
 		//allPlayersArr[currPlayer].forEach(movePawn);
-		var allowToMove = false;
-		allPlayersArr[currPlayer].forEach(function (it){
-			if (it.status.home) allowToMove = true;
-		});
+		//var allowToMove = false;
+		// allPlayersArr[currPlayer].forEach(function (it){
+			// if (it.status.home) allowToMove = true;
+		// });
 		if(playerInQuestion){
-			if((diceValue === 6) && (playerInQuestion.status.home)){				
-					playerInQuestion.position.x = arrPoses[currPlayer][8] * tileWidth;
-					playerInQuestion.position.y = arrPoses[currPlayer][9] * tileWidth;
-					playerInQuestion.tile =	homeTiles[currPlayer];				
-			} else if((diceValue !== 6) && allowToMove){
+			if((diceValue === 6) && (playerInQuestion.status.home)){
+			
+					playerInQuestion.x = arrPoses[currPlayer][8] * tileWidth;					
+					playerInQuestion.y = arrPoses[currPlayer][9] * tileWidth;
+					console.log('pyrva 6-ca' + playerInQuestion)
+					playerInQuestion.tile =	homeTiles[currPlayer];
+					playerInQuestion.status.home = false;				
+					for(var arrIndex in allPlayersArr[currPlayer]){
+						if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+							allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+						}
+					}					
+					console.log('tile ' + playerInQuestion.tile)					
+			} else {
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
 						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);
-						if(routs[currPlayer].indexOf(ini+diceValue)!==-1){
+						console.log('ini ' + ini)
+						if((ini+diceValue)<=routs[currPlayer].length){
 							var nextTile = routs[currPlayer][ini+diceValue];
+							console.log('next tile ' + nextTile)
 							var currColmn, currRow, nextColmn, nextRow; 
-							var coordOfCT = findCoordinates(playerInQuestion.tile);
-							var coordOfNT = findCoordinates(nextTile);
-							playerInQuestion.position.x = playerInQuestion.position.x + (coordOfCT[0]-coordOfNT[0])* tileWidth;
-							playerInQuestion.position.y = playerInQuestion.position.y + (coordOfCT[1]-coordOfNT[1])* tileWidth;
-							playerInQuestion.tile =	homeTiles[currPlayer];	
+							var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);
+							console.log('ct coord ' + coordOfCT)
+							var coordOfNT = findCoordinates(nextTile, mapXY);
+							console.log('nt coord ' + coordOfNT)
+							var a = playerInQuestion.x;
+							var b = playerInQuestion.y;	
+							// var c = (coordOfNT[1]-coordOfCT[1])* tileWidth;
+							// var d = (coordOfNT[0]-coordOfCT[0])* tileWidth;
+							var c = (coordOfNT[1]-coordOfCT[1])* tileWidth;
+							var d =(coordOfNT[0]-coordOfCT[0])* tileWidth;
+							// switch(currPlayer){
+								// case 0:{c = (coordOfNT[1]-coordOfCT[1])* tileWidth; d =(coordOfNT[0]-coordOfCT[0])* tileWidth;}; break;
+								// case 1:{c = (coordOfNT[1]-coordOfCT[1])* tileWidth; d =(coordOfNT[0]-coordOfCT[0])* tileWidth;}; break;
+								// case 2:{c = (coordOfNT[0]-coordOfCT[0])* tileWidth; d =(coordOfCT[1]-coordOfNT[1])* tileWidth;}; break;
+								// case 3:{c = -(coordOfNT[0]-coordOfCT[0])* tileWidth; d =-(coordOfCT[1]-coordOfNT[1])* tileWidth;}; break;
+							// }
+							playerInQuestion.x += c;
+							playerInQuestion.y += d;
+							// playerInQuestion.x += (coordOfNT[1]-coordOfCT[1])* tileWidth;
+							// playerInQuestion.y += (coordOfNT[0]-coordOfCT[0])* tileWidth;
+							for(var arrIndex in allPlayersArr[currPlayer]){
+								if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
+									allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
+								}
+							}
+							console.log(playerInQuestion);
+							playerInQuestion.tile =	nextTile;	
 							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
 								playerInQuestion.status.saved = true;
 							}
 						} else {
 							clicked = false;
 						}				
-					}
-			}  else clicked = false;
+					} else clicked = false;
+			} 
 		
-		}
-		
-		console.log(playerInQuestion);
-		clicked = false;
-		console.log(diceInfoHolder);
+		}		
+		clicked = false;	
 	}		
 	
 	
 	// allPlayersArr.forEach(function(colorArray){
 		// colorArray.forEach(function (play){
-			// upctx.drawImage(document.getElementById(play.img),play.position.x, play.position.y, play.width, play.height);
+			// upctx.drawImage(document.getElementById(play.img),play.x, play.y, play.width, play.height);
 		// });		
 	// });
 	
@@ -478,11 +524,11 @@ function placePawns(posX,posY){
 	} 
 	
 	function tick(){
-		upctx.clearRect(0, 0, canvas.width, canvas.height);
+		upctx.clearRect(0, 0, canvas.width, canvas.height);		
 		allPlayersArr.forEach(function(colorArray){
 			colorArray.forEach(function (play){
 				play.update();				
-				upctx.drawImage(document.getElementById(play.img),play.position.x, play.position.y, play.width, play.height);
+				upctx.drawImage(document.getElementById(play.img),play.x, play.y, play.width, play.height);
 			});			
 		});
 	}
@@ -493,12 +539,12 @@ function placePawns(posX,posY){
 	
 	update();
 }
-
-function findCoordinates(tile){
+var mapXY = createValueMap();
+function findCoordinates(tile,mapxy){
 	var coordinates = [];
-	for(var colmn in mapxy){
+	for(var colmn=0; colmn<=14; colmn++){
 		var row = mapxy[colmn].indexOf(tile); 
-		if (inde !== -1){
+		if (row !== -1){
 			coordinates = [colmn,row];
 		}
 	}
@@ -508,23 +554,16 @@ function findCoordinates(tile){
 function pawnIsClicked(currPlayer, pX, pY){	
 	var p;
 	allPlayersArr[currPlayer].forEach(function (player) {
-		if (player.boundingBox.contains(pX,pY)){
+		if (pX >= player.x && pX <= player.x + player.width &&
+        pY >= player.y && pY <= player.y + player.height){
 			p = player;							
 		}
 	});
 	return p;
 }
 
-// function movePawn(player){
-	// if(diceValue === 6){
-		
-	// }
-// }
-
-var mapxy = createValueMap();
-
 function createValueMap() {
-    var mapxy = new Array();
+    var mapxy = [];
     mapxy.push([00, 00, 00, 00, 00, 00, 01, 02, 03, 00, 00, 00, 00, 00, 00]);
     mapxy.push([00, 00, 00, 00, 00, 00, 56, 60, 04, 00, 00, 00, 00, 00, 00]);
     mapxy.push([00, 00, 00, 00, 00, 00, 55, 61, 05, 00, 00, 00, 00, 00, 00]);
@@ -586,8 +625,10 @@ function initiatepawnRouts() {
 		for(tileIndex = 80; tileIndex<=85; tileIndex++){
 			rout.push(tileIndex);
 		}
-		return rout;
+		
+		return rout;		
 	})();
+	console.log(blueRout + 'blue rout');
 
 	var greenRout = (function () {
 		var rout = [];
@@ -604,9 +645,13 @@ function initiatepawnRouts() {
 	})();
 	
     routs.push(yellowRout);
+	//console.log(yellowRout)
 	routs.push(redRout);
+	//console.log(redRout)
 	routs.push(greenRout);
-    routs.push(blueRout);    
+	//console.log(greenRout)
+    routs.push(blueRout);  
+	//console.log(blueRout)	
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -618,7 +663,7 @@ function randomNum() {
         var num = Math.floor((Math.random() * 6) + 1);		
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-		diceInfoHolder = [num, playerIndex];		
+		diceInfoHolder = [num, playerIndex];			
 		if(num!==6){
 			var canWeMove = false;
 			allPlayersArr[playerIndex].forEach(function (player){

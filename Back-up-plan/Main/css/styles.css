@@ -2,10 +2,9 @@ html, body {
     top:0;
     padding: 0;
     margin: 0 auto;
-	
 }
 body{
- 
+    /*background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../images/bg.jpg);    */
 }
 
 #playGround {
@@ -76,7 +75,7 @@ div#dice-section canvas {
     margin: 0.5em 0;
 }
 #dice-section #player {
-    color: white;
+    color: red;
     font-weight: bold;
 }
 #buttondiv {
@@ -103,9 +102,6 @@ div#dice-section canvas {
     color: white;
 }
 
-#player {
-	display:inline;
-}
 
 
 
