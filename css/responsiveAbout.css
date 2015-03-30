@@ -1,10 +1,8 @@
-
-
 @media only screen and (max-width: 2400px){
 	
 	html, body{
 		height: 100%;
-		font-family: Illuminati;
+		font-family: Arial;
 	}
 	body{
 		background-color: #49708A;
@@ -25,12 +23,13 @@
 		padding: 0 1em;
 		text-transform: uppercase;
 		font-weight: bold;
+		background-image:url("C:\Users\ivaylo\Documents\GitHub\Team-Gemini-\Team-Gemini-\img\bg.jpg");
 	}
 	.header.navigation{
 		width: 100%;
 		display: inline-flex;
 		justify-content: space-between;
-		background-image:url("C:\Users\ivaylo\Documents\GitHub\Team-Gemini-\Team-Gemini-\img\bg.jpg");
+		
 	}
 	#btn-menu{
 		display: none;
@@ -115,10 +114,6 @@
 		overflow: auto;
 		min-height: 76.5vh;
 		padding: 1em;
-	}
-	.paragraph img{
-		width: 150px;
-		max-width: 100%;
 	}
 	section{
 		float: left;
