@@ -733,33 +733,42 @@ var diceInfoHolder =[0,0];
 var playerIndex = 0;
 var clicked = false;
 
+function changePlayer()
+{
+    document.getElementById("player");
+    dice.style.backgroundImage = "url(images/dice.gif)";
+    window.onload = changePlayer;
+}
 
 function randomNum() {
-    if (!clicked) {		
-        var num = Math.floor((Math.random() * 6) + 1);		
+    if (!clicked) {     
+        var num = Math.floor((Math.random() * 6) + 1);      
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-		diceInfoHolder = [num, playerIndex];
-		document.getElementById('badtext').innerText = '';		
-		if(num!==6){
-			var canWeMove = false;
-			allPlayersArr[playerIndex].forEach(function (player){
-				if(!player.status.home){
-					canWeMove=true;
-				}
-			});
-			document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
-			document.getElementById('player').style.color = roles[playerIndex];
-			if (playerIndex === 3) playerIndex=0;
-			else playerIndex+=1;			
-			clicked = false;
-			playersTurn = true;
-			return;
-		}		
-		document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
-		document.getElementById('player').style.color = roles[playerIndex];
-		playersTurn = true;
-        clicked = true;		
+        diceInfoHolder = [num, playerIndex];
+        if(num !== 6) {
+            window.setTimeout(changePlayer, 1000);
+            var canWeMove = false;
+            allPlayersArr[playerIndex].forEach(function (player){
+                if(!player.status.home) {
+                    canWeMove = true;
+                }
+            });
+            document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
+            document.getElementById('player').style.color = roles[playerIndex];
+            if (playerIndex === 3) {
+                playerIndex = 0;
+            }else {
+                playerIndex += 1;         
+                clicked = false;
+                playersTurn = true;
+                return;
+            }
+        }       
+        document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
+        document.getElementById('player').style.color = roles[playerIndex];
+        playersTurn = true;
+        clicked = true;     
     }    
 }
 
