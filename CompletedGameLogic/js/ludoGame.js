@@ -512,14 +512,15 @@ function placePawns(posX,posY){
 	}	
 	
 	if (posX && posY && playersTurn){
-		playerHasMoved=false;
+		
 		var rect = upcanvas.getBoundingClientRect();		
 		posX = posX-rect.left;	
 		posY = posY-rect.top;	
 		var currPlayer = diceInfoHolder[1];
 		var diceValue = diceInfoHolder[0];		
 		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY,tileWidth);		
-		if(playerInQuestion){			
+		if(playerInQuestion){	
+			playerHasMoved=false;
 			if((diceValue === 6) && (playerInQuestion.status.home)){				
 					playerInQuestion.x = arrPoses[currPlayer][8];					
 					playerInQuestion.y = arrPoses[currPlayer][9];
