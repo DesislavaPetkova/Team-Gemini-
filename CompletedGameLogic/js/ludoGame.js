@@ -20,8 +20,11 @@ arrPoses.push(greenposes);
 arrPoses.push(blueposes);
 var oldTileWidth = 0;
 var homeTiles = [45,03,17,31];
-var playersNames=['God', 'bug1', 'bug2', 'Master Programmer' ];
+var playersNames=['GOD', 'Chaos', 'Program Bug', 'Programmer' ];
 var roles = ["yellow", "red", "green", "blue"];
+var playerHasMoved = false;
+var gameOn = true;
+var fontsArr = ['Impact', 'Shoguns-Clan', 'Underodd', 'consolas'];
 
 CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     if (w < 2 * r) r = w / 2;
@@ -445,7 +448,7 @@ function drawArrow(direction, width) {
 }
 
 function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,bordercolor) {
-     var rot = Math.PI / 2 * 3;
+    var rot = Math.PI / 2 * 3;
     var x = cx;
     var y = cy;
     var step = Math.PI / spikes;
@@ -474,13 +477,20 @@ function drawAirPort(cx, cy, spikes, outerRadius, innerRadius,innercolor,borderc
     
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var homeSpot = 0;
+var homeSpotHolder = {
+	0:[2.2,2.2],1:[3.3,2.2],2:[2.2,3.2],3:[3.3,3.2],
+	4:[11.57, 2.2],5:[12.65, 2.2],6:[11.57, 3.2],7:[12.67, 3.2],
+	8:[11.6, 11.6],9:[12.7, 11.6],10:[11.6, 12.7],11:[12.7, 12.7],
+	12:[2.2, 11.65],13:[3.3, 11.65],14:[2.2, 12.70],15:[3.3, 12.7]
+}
+
 function initPawns(color,poses){
-	var pawns = [];
-	var n =0;	
+	var pawns = [];		
 	for(var i = 0; i<8; i++){		
-		var pawn = new Player(poses[i], poses[++i], tileWidth, color+'player', tileWidth, n);		
+		var pawn = new Player(poses[i], poses[++i], tileWidth, color+'player', tileWidth, homeSpot);		
 		pawns.push(pawn);
-		n++;		
+		homeSpot++;		
 	}	
 	return pawns;	
 }
@@ -499,67 +509,38 @@ function placePawns(posX,posY){
 		allPlayersArr.push(greenPlayers);
 		var bluePlayers = initPawns('blue',blueposes);
 		allPlayersArr.push(bluePlayers);		
-	}
+	}	
 	
-	
-	if (posX && posY && playersTurn ){	
-		
-		var rect = upcanvas.getBoundingClientRect();
-		// console.log('posX ' + posX)
-		// console.log('posY ' + posY)
-		posX = posX-rect.left;
-		// console.log('posX ' + posX)
-		// console.log('rect.left ' + rect.left)
-		posY = posY-rect.top;
-		// console.log('posY ' + posY)
-		// console.log('rect.top ' + rect.top)
+	if (posX && posY && playersTurn){
+		playerHasMoved=false;
+		var rect = upcanvas.getBoundingClientRect();		
+		posX = posX-rect.left;	
+		posY = posY-rect.top;	
 		var currPlayer = diceInfoHolder[1];
-		var diceValue = diceInfoHolder[0];
-		// console.log(diceInfoHolder)
-		// console.log(allPlayersArr)
-		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY,tileWidth);
-		console.log(playerInQuestion)
-		//allPlayersArr[currPlayer].forEach(movePawn);
-		//var allowToMove = false;
-		// allPlayersArr[currPlayer].forEach(function (it){
-			// if (it.status.home) allowToMove = true;
-		// });
-		if(playerInQuestion){
-			if((diceValue === 6) && (playerInQuestion.status.home)){
-			
+		var diceValue = diceInfoHolder[0];		
+		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY,tileWidth);		
+		if(playerInQuestion){			
+			if((diceValue === 6) && (playerInQuestion.status.home)){				
 					playerInQuestion.x = arrPoses[currPlayer][8];					
 					playerInQuestion.y = arrPoses[currPlayer][9];
-					playerInQuestion.width = tileWidth;
-					console.log('pyrva 6-ca' + playerInQuestion)
+					playerInQuestion.width = tileWidth;					
 					playerInQuestion.tile =	homeTiles[currPlayer];
-					playerInQuestion.status.home = false;				
-					for(var arrIndex in allPlayersArr[currPlayer]){
-						if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
-							allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
-						}
-					}					
+					playerInQuestion.status.score = 1;
+					playerInQuestion.status.home = false;									
 					playersTurn = false;					
-			} else {
+			} else {		
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
-						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);
-						console.log('ini ' + ini)
-						if((ini+diceValue)<=routs[currPlayer].length){
+						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);						
+						if((ini+diceValue)<=routs[currPlayer].length){							
+							playerInQuestion.status.score += diceValue;
 							var nextTile = routs[currPlayer][ini+diceValue];
-							console.log('next tile ' + nextTile)
+							checkIfThereIsPlayerOnTile(nextTile,currPlayer);
 							var currColmn, currRow, nextColmn, nextRow; 
-							var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);
-							console.log('ct coord ' + coordOfCT)
-							var coordOfNT = findCoordinates(nextTile, mapXY);
-							console.log('nt coord ' + coordOfNT)														
+							var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);				
+							var coordOfNT = findCoordinates(nextTile, mapXY);															
 							playerInQuestion.x += (coordOfNT[1]-coordOfCT[1]);
 							playerInQuestion.y += (coordOfNT[0]-coordOfCT[0]);
-							playerInQuestion.width = tileWidth;
-							for(var arrIndex in allPlayersArr[currPlayer]){
-								if(allPlayersArr[currPlayer][arrIndex].num === playerInQuestion.num){
-									allPlayersArr[currPlayer][arrIndex] === playerInQuestion.num;
-								}
-							}
-							console.log(playerInQuestion);
+							playerInQuestion.width = tileWidth;							
 							playerInQuestion.tile =	nextTile;	
 							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
 								playerInQuestion.status.saved = true;
@@ -568,44 +549,32 @@ function placePawns(posX,posY){
 						} else {
 							clicked = false;
 						}				
-					} else {
+					} else {						
 						clicked = false;
-						document.getElementById('badtext').innerText = 'Impossible Move';
+						document.getElementById('badtext').innerText = '<Impossible Move>';
 					}
-			} 
-		
-		} else 	document.getElementById('badtext').innerText = 'Roll the Dice';	
+			}		
+		} else 	document.getElementById('badtext').innerText = '<Impossible Move>';	
 		clicked = false;	
-	 } else	if (posX && posY) {		 
+	 } else	{
+		 if (posX && posY) {		 
 		 document.getElementById('badtext').innerText = 'Roll the Dice';
+		} 		
 	 }
-	
-	
-	// allPlayersArr.forEach(function(colorArray){
-		// colorArray.forEach(function (play){
-			// upctx.drawImage(document.getElementById(play.img),play.x, play.y, play.width, play.height);
-		// });		
-	// });
-	
-	function update(){
-		//this.r = render(upctx);
+	function update(){	
 		this.t = tick();
-		
-		//requestAnumationFrame(update);
 	} 
 	
 	function tick(){
-		upctx.clearRect(0, 0, canvas.width, canvas.height);		
-		allPlayersArr.forEach(function(colorArray){
-			colorArray.forEach(function (play){
-				play.update();
-var a = 	play.x;
-	var b = 	play.width;		
-				//play = new Player(play.x, play.y,tileWidth,play.img, play.height, play.num);
-				
+		upctx.clearRect(0, 0, canvas.width, canvas.height);	
+		for(var cArr=0; cArr<4; cArr++){	
+			var score = 0;
+			allPlayersArr[cArr].forEach(function (play){		
 				upctx.drawImage(document.getElementById(play.img),play.x*tileWidth, play.y*tileWidth, tileWidth, tileWidth);
-			});			
-		});
+				score += play.status.score;
+			});
+			document.getElementById(divScore[cArr]).innerText = score+' \/ 248';
+		};
 	}
 	
 	function render(upctx){
@@ -614,6 +583,22 @@ var a = 	play.x;
 	
 	update();
 }
+var divScore = ['gscore', 'b1score', 'b2score', 'pscore'];
+function checkIfThereIsPlayerOnTile(nextTile,currPlayer){
+		for(var i in allPlayersArr){
+			if(i != currPlayer){
+				for(var j in allPlayersArr[i]){
+					var cPlayer = allPlayersArr[i][j];
+					if (cPlayer.tile == nextTile){
+						var c = cPlayer.homeIndex.toString();
+						cPlayer.x = homeSpotHolder[c][0];
+						cPlayer.y = homeSpotHolder[c][1];
+					}
+				}
+			}
+		}	
+}
+
 var mapXY = createValueMap();
 function findCoordinates(tile,mapxy){
 	var coordinates = [];
@@ -718,63 +703,64 @@ function initiatepawnRouts() {
 		return rout;
 	})();
 	
-    routs.push(yellowRout);
-	//console.log(yellowRout)
-	routs.push(redRout);
-	//console.log(redRout)
+    routs.push(yellowRout);	
+	routs.push(redRout);	
 	routs.push(greenRout);
-	//console.log(greenRout)
     routs.push(blueRout);  
-	//console.log(blueRout)	
+	
 }
 
 ////////////////////////////////////////////////////////////////////
 var diceInfoHolder =[0,0];
 var playerIndex = 0;
 var clicked = false;
+var canvasClicked = 0;
 
-function diceRoll()
-{
-    document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
-    document.getElementById('player').style.color = roles[playerIndex];
-    document.getElementById("player");
-    dice.style.backgroundImage = "url(images/dice.gif)";
-    window.onload = diceRoll;
-}
-
-function randomNum() {
-    if (!clicked) {     
-        var num = Math.floor((Math.random() * 6) + 1);      
+function randomNum() {	
+	for(var sc=0; sc<4; sc++){
+		var currScore = document.getElementById(divScore[sc]).innerText;
+		if(Number(currScore) >=248) {
+			gameOn = false;
+			document.getElementById('badtext').innerText = 'Game Over./nThe round won' + playersNames[sc];
+		}
+	}
+	
+    if (!clicked && !playerHasMoved && gameOn) {		
+        var num = Math.floor((Math.random() * 6) + 1);		
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-        diceInfoHolder = [num, playerIndex];
-        if(num !== 6) {
-            window.setTimeout(diceRoll, 1000);
-            var canWeMove = false;
-            allPlayersArr[playerIndex].forEach(function (player){
-                if(!player.status.home) {
-                    canWeMove = true;
-                }
-            });
-            document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
-            document.getElementById('player').style.color = roles[playerIndex];
-            if (playerIndex === 3) {
-                playerIndex = 0;
-            }else {
-                playerIndex += 1;         
-                clicked = false;
-                playersTurn = true;
-                return;
-            }
-        }       
-        document.getElementById('player').innerText = playersNames[playerIndex] + '\'s turn';
-        document.getElementById('player').style.color = roles[playerIndex];
-        playersTurn = true;
-        clicked = true;  
-        if (num !== 6) {
-            clicked = false;
-        }   
-    }    
+		diceInfoHolder = [num, playerIndex];
+		document.getElementById('badtext').innerText = '';		
+		if(num!==6){			
+			document.getElementById('player').innerText = playersNames[playerIndex];
+			document.getElementById('player').style.color = roles[playerIndex];
+			document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
+			if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
+			if (playerIndex==3) document.getElementById('player').style.fontSize = '1.3em';
+			playerHasMoved = false;
+			allPlayersArr[playerIndex].forEach(function (play){
+			if(!play.status.home){
+				playerHasMoved = true;	
+			}					
+			});
+			if (playerIndex === 3) playerIndex=0;			
+			else playerIndex+=1;			
+			clicked = false;			
+			playersTurn = true;			
+			return;
+		}		
+		document.getElementById('player').innerText = playersNames[playerIndex];
+		document.getElementById('player').style.color = roles[playerIndex];	
+		document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
+		if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
+		if (playerIndex==3) document.getElementById('player').style.fontSize = '1.3em';
+		playerHasMoved = true;
+		playersTurn = true;		
+        clicked = true;		
+    }   
+
+
+		
 }
 
 
