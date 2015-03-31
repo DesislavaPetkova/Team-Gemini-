@@ -527,6 +527,7 @@ function placePawns(posX,posY){
 					playerInQuestion.width = tileWidth;					
 					playerInQuestion.tile =	homeTiles[currPlayer];
 					playerInQuestion.status.score = 1;
+					checkIfThereIsPlayerOnTile(homeTiles[currPlayer],currPlayer);
 					playerInQuestion.status.home = false;									
 					playersTurn = false;					
 			} else {		
