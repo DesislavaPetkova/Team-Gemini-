@@ -594,6 +594,8 @@ function checkIfThereIsPlayerOnTile(nextTile,currPlayer){
 						var c = cPlayer.homeIndex.toString();
 						cPlayer.x = homeSpotHolder[c][0];
 						cPlayer.y = homeSpotHolder[c][1];
+						cPlayer.status.home = true;
+						cPlayer.status.score=0;
 					}
 				}
 			}
