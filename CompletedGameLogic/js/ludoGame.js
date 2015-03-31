@@ -531,7 +531,8 @@ function placePawns(posX,posY){
 					playersTurn = false;					
 			} else {		
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
-						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);						
+						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);		
+						playersTurn = false;						
 						if((ini+diceValue)<=routs[currPlayer].length){							
 							playerInQuestion.status.score += diceValue;
 							var nextTile = routs[currPlayer][ini+diceValue];
@@ -574,14 +575,9 @@ function placePawns(posX,posY){
 				upctx.drawImage(document.getElementById(play.img),play.x*tileWidth, play.y*tileWidth, tileWidth, tileWidth);
 				score += play.status.score;
 			});
-			document.getElementById(divScore[cArr]).innerText = score+' \/ 248';
+			document.getElementById(divScore[cArr]).innerText = score+' / 248';
 		};
-	}
-	
-	function render(upctx){
-		upctx.clearRect(0, 0, canvas.width, canvas.height);
-	}
-	
+	}	
 	update();
 }
 var divScore = ['gscore', 'b1score', 'b2score', 'pscore'];
@@ -726,7 +722,7 @@ function randomNum() {
 			gameOn = false;
 			document.getElementById('badtext').innerText = 'Game Over./nThe round won' + playersNames[sc];
 		}
-	}
+	}	
 	
     if (!clicked && !playerHasMoved && gameOn) {		
         var num = Math.floor((Math.random() * 6) + 1);		
