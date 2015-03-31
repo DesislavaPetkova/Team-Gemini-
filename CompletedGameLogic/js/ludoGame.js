@@ -20,7 +20,7 @@ arrPoses.push(greenposes);
 arrPoses.push(blueposes);
 var oldTileWidth = 0;
 var homeTiles = [45,03,17,31];
-var playersNames=['GOD', 'Chaos', 'Program Bug', 'Programmer' ];
+var playersNames=['GOD', 'Chaos', 'Matrix Bug', 'Programmer' ];
 var roles = ["yellow", "red", "green", "blue"];
 var playerHasMoved = false;
 var gameOn = true;
@@ -554,14 +554,18 @@ function placePawns(posX,posY){
 						}				
 					} else {						
 						clicked = false;
-						document.getElementById('badtext').innerText = '<Impossible Move>';
+						document.getElementById('badtext').innerText = '< Impossible Move >';
+						document.getElementById('badtext').style.opacity = '1';
 					}
 			}		
-		} else 	document.getElementById('badtext').innerText = '<Impossible Move>';	
+		} else 	{document.getElementById('badtext').innerText = '< Impossible Move >';
+				document.getElementById('badtext').style.opacity = '1';
+		}	
 		clicked = false;	
 	 } else	{
 		 if (posX && posY) {		 
 		 document.getElementById('badtext').innerText = 'Roll the Dice';
+		 document.getElementById('badtext').style.opacity = '1';
 		} 		
 	 }
 	function update(){	
@@ -730,7 +734,7 @@ function randomNum() {
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
 		diceInfoHolder = [num, playerIndex];
-		document.getElementById('badtext').innerText = '';		
+		document.getElementById('badtext').style.opacity = '0';		
 		if(num!==6){			
 			document.getElementById('player').innerText = playersNames[playerIndex];
 			document.getElementById('player').style.color = roles[playerIndex];

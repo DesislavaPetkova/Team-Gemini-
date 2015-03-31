@@ -19,6 +19,12 @@ body{
 	
 }
 
+@font-face {
+	font-family: Kocoon-Light;
+    src: url(Kocoon-Light.otf);
+	
+}
+
 #playGround {
     display: flex;
     margin: 0 auto;
@@ -156,6 +162,13 @@ div#dice-section canvas {
 	letter-spacing:2px;
 }
 
+#badtext {
+	font-family:Kocoon-Light;
+	font-size: 1.2em;
+	font-weight:bold;
+	text-shadow:1px 1px 1px black;
+}
+
 #scores p{
     margin: 5px 0;
     padding: 0 0.5em 0 0;
@@ -164,3 +177,9 @@ div#dice-section canvas {
     font-weight: normal;
 }
 
+#dice-section>p:first-of-type {
+	 font-size: 1.5em;
+	 font-family:Verbana;
+	 font-weight:bold;
+	 text-shadow:2px 2px 2px black;
+}
