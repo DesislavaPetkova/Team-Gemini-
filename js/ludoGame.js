@@ -153,6 +153,12 @@ function drawTheBoard() {
                 case 91: ctx.putImageData(drawTwoColorTilewithCircle("yb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 92: ctx.putImageData(drawTwoColorTilewithCircle("rg", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
                 case 93: ctx.putImageData(drawTwoColorTilewithCircle("gb", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 101: ctx.putImageData(drawFirstStepTile("blue", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 102: ctx.putImageData(drawFirstStepTile("green", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 103: ctx.putImageData(drawFirstStepTile("red", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+                case 104: ctx.putImageData(drawFirstStepTile("yellow", tileWidth, true), tileWidth / 2 + tileWidth * x, tileWidth / 2 + tileWidth * y); break;
+
+
                 default: break;
             }
         }
@@ -162,21 +168,21 @@ function drawTheBoard() {
 function createMap() {
     var mapxy = new Array();
     //notile:0, blue:1,green:2,red:3,yello:4;
-    mapxy.push([0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 0, 3, 3, 103, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 3, 30, 3, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 90, 3, 30, 3, 92, 0, 0, 0, 0, 0]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 5, 30, 7, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([104, 4, 4, 4, 4, 4, 5, 30, 7, 2, 2, 2, 2, 2, 2]);
     mapxy.push([4, 20, 20, 20, 20, 20, 20, 0, 40, 40, 40, 40, 40, 40, 2]);
-    mapxy.push([4, 4, 4, 4, 4, 4, 6, 10, 8, 2, 2, 2, 2, 2, 2]);
+    mapxy.push([4, 4, 4, 4, 4, 4, 6, 10, 8, 2, 2, 2, 2, 2, 102]);
     mapxy.push([0, 0, 0, 0, 0, 91, 1, 10, 1, 93, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
     mapxy.push([0, 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 0]);
-    mapxy.push([0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0]);
+    mapxy.push([0, 0, 0, 0, 0, 0, 101, 1, 1, 0, 0, 0, 0, 0, 0]);
 
     return mapxy;
 }
@@ -222,6 +228,34 @@ function drawARegularTile(color, width) {
             }
             else {
                 setColor(color);
+            }
+            imgData.data[pos++] = colorR;
+            imgData.data[pos++] = colorG;
+            imgData.data[pos++] = colorB;
+            imgData.data[pos++] = colorA;
+        }
+    }
+    return imgData;
+}
+function drawFirstStepTile(color, width) {
+    var imgData = ctx.createImageData(width, width);
+    var pos = 0;
+    for (var x = 0; x < width; x++) {
+        for (var y = 0; y < width; y++) {
+            var x2 = x - Math.ceil(width / 2);
+            var y2 = y - Math.ceil(width / 2);
+            var distance = Math.ceil(Math.sqrt(x2 * x2 + y2 * y2));
+            var circlewall = Math.ceil(width / 2 * 0.8);
+            var circleWidth = Math.ceil(width / 20);
+            ys = new Array();
+            for (var j = 0; j < circleWidth; j++) {
+                ys.push(y - Math.ceil(circleWidth / 2 * 0.9) - +circleWidth + j);
+            }
+            if ((circlewall - circleWidth) < distance && distance < circlewall) {
+                setColor(color);
+            }
+            else {
+                setColor("white");
             }
             imgData.data[pos++] = colorR;
             imgData.data[pos++] = colorG;
