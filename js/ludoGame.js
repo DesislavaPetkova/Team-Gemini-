@@ -546,7 +546,7 @@ function placePawns(posX,posY){
 	}	
 	
 	if (posX && posY && playersTurn){
-		
+		document.getElementById('badtext').style.opacity = '0';	
 		var rect = upcanvas.getBoundingClientRect();		
 		posX = posX-rect.left;	
 		posY = posY-rect.top;	
@@ -554,8 +554,9 @@ function placePawns(posX,posY){
 		var diceValue = diceInfoHolder[0];		
 		var playerInQuestion = pawnIsClicked(currPlayer,posX,posY,tileWidth);		
 		if(playerInQuestion){	
-			playerHasMoved=false;
-			if((diceValue === 6) && (playerInQuestion.status.home)){				
+		
+			if((diceValue === 6) && (playerInQuestion.status.home)){
+					playerHasMoved=false;
 					playerInQuestion.x = arrPoses[currPlayer][8];					
 					playerInQuestion.y = arrPoses[currPlayer][9];
 					playerInQuestion.width = tileWidth;					
@@ -563,12 +564,11 @@ function placePawns(posX,posY){
 					playerInQuestion.status.score = 1;
 					checkIfThereIsPlayerOnTile(homeTiles[currPlayer],currPlayer);
 					playerInQuestion.status.home = false;									
-					playersTurn = false;	
-					document.getElementById('player').innerText = playersNames[playerIndex];
-					document.getElementById('player').style.color = roles[playerIndex];
-					document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
+					playersTurn = false;
+					changeNames(playerIndex);					
 			} else {		
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
+						playerHasMoved=false;
 						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);		
 						playersTurn = false;						
 						if((ini+diceValue)<=routs[currPlayer].length){							
@@ -586,9 +586,7 @@ function placePawns(posX,posY){
 								playerInQuestion.status.saved = true;
 							}
 							playersTurn = false;
-							document.getElementById('player').innerText = playersNames[playerIndex];
-							document.getElementById('player').style.color = roles[playerIndex];
-							document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
+							changeNames(playerIndex);							
 						} else {
 							clicked = false;
 						}				
@@ -625,6 +623,15 @@ function placePawns(posX,posY){
 	}	
 	update();
 }
+
+function changeNames(pi){
+	document.getElementById('player').innerText = playersNames[pi];
+	document.getElementById('player').style.color = roles[pi];
+	document.getElementById('player').style.fontFamily = fontsArr[pi];
+	if (pi==2) document.getElementById('player').style.fontSize = '1em';
+	if (pi==3) document.getElementById('player').style.fontSize = '1.3em';
+}
+
 var divScore = ['gscore', 'b1score', 'b2score', 'pscore'];
 function checkIfThereIsPlayerOnTile(nextTile,currPlayer){
 		for(var i in allPlayersArr){
@@ -731,7 +738,6 @@ function initiatepawnRouts() {
 		
 		return rout;		
 	})();
-	console.log(blueRout + 'blue rout');
 
 	var greenRout = (function () {
 		var rout = [];
@@ -768,19 +774,14 @@ function randomNum() {
 			document.getElementById('badtext').innerText = 'Game Over./nThe round won' + playersNames[sc];
 		}
 	}	
-	
+	document.getElementById('badtext').style.opacity = '0';
     if (!clicked && !playerHasMoved && gameOn) {		
-        var num = Math.floor((Math.random() * 6) + 1);		
+        num = Math.floor((Math.random() * 6) + 1);		
         var dice = document.getElementById('dice');
         dice.style.backgroundImage = "url(images/" + num + ".jpg)";
-		diceInfoHolder = [num, playerIndex];
-		document.getElementById('badtext').style.opacity = '0';		
-		if(num!==6){			
-			document.getElementById('player').innerText = playersNames[playerIndex]+': '+ num;
-			document.getElementById('player').style.color = roles[playerIndex];
-			document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
-			if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
-			if (playerIndex==3) document.getElementById('player').style.fontSize = '1.3em';
+		diceInfoHolder = [num, playerIndex];			
+		if(num!==6){		
+			changeName(playerIndex)
 			playerHasMoved = false;
 			allPlayersArr[playerIndex].forEach(function (play){
 			if(!play.status.home){
@@ -793,12 +794,8 @@ function randomNum() {
 			playersTurn = true;	
 			window.setTimeout(backgroundDice, 1500);
 			return;
-		}		
-		document.getElementById('player').innerText = playersNames[playerIndex]+': '+ num;
-		document.getElementById('player').style.color = roles[playerIndex];	
-		document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
-		if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
-		if (playerIndex==3) document.getElementById('player').style.fontSize = '1.3em';
+		}	
+		changeName(playerIndex);		
 		playerHasMoved = true;
 		playersTurn = true;		
         clicked = true;	
@@ -809,5 +806,12 @@ function randomNum() {
 function backgroundDice(){
 	dice.style.backgroundImage = "url(images/dice.gif)";
 }
-
+var num;
+function changeName(pi){
+	document.getElementById('player').innerText = playersNames[pi]+': '+ num;
+	document.getElementById('player').style.color = roles[pi];
+	document.getElementById('player').style.fontFamily = fontsArr[pi];
+	if (pi==2) document.getElementById('player').style.fontSize = '1em';
+	if (pi==3) document.getElementById('player').style.fontSize = '1.3em';
+}
 
