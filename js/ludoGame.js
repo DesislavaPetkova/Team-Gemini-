@@ -563,7 +563,10 @@ function placePawns(posX,posY){
 					playerInQuestion.status.score = 1;
 					checkIfThereIsPlayerOnTile(homeTiles[currPlayer],currPlayer);
 					playerInQuestion.status.home = false;									
-					playersTurn = false;					
+					playersTurn = false;	
+					document.getElementById('player').innerText = playersNames[playerIndex];
+					document.getElementById('player').style.color = roles[playerIndex];
+					document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
 			} else {		
 					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
 						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);		
@@ -583,6 +586,9 @@ function placePawns(posX,posY){
 								playerInQuestion.status.saved = true;
 							}
 							playersTurn = false;
+							document.getElementById('player').innerText = playersNames[playerIndex];
+							document.getElementById('player').style.color = roles[playerIndex];
+							document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
 						} else {
 							clicked = false;
 						}				
