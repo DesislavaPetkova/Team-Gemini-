@@ -750,7 +750,8 @@ function randomNum() {
 			if (playerIndex === 3) playerIndex=0;			
 			else playerIndex+=1;			
 			clicked = false;			
-			playersTurn = true;			
+			playersTurn = true;	
+			window.setTimeout(backgroundDice, 1500);
 			return;
 		}		
 		document.getElementById('player').innerText = playersNames[playerIndex];
@@ -760,11 +761,13 @@ function randomNum() {
 		if (playerIndex==3) document.getElementById('player').style.fontSize = '1.3em';
 		playerHasMoved = true;
 		playersTurn = true;		
-        clicked = true;		
-    }   
+        clicked = true;	
+		window.setTimeout(backgroundDice, 1500);
+    }  		
+}
 
-
-		
+function backgroundDice(){
+	dice.style.backgroundImage = "url(images/dice.gif)";
 }
 
 
