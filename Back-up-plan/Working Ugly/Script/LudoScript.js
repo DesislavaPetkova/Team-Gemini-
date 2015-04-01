@@ -14,8 +14,8 @@ function HaveHover() {
     for (var i = 0; i < player.length; i++) {
         for (var n = 1; n <= 4; n++) {
             var firstPawn = document.getElementById(player[i] + n);
-            var secondPawn = document.getElementById(currpawn);
-            if (firstPawn.style.top == secondPawn.style.top && firstPawn.style.left == secondPawn.style.left && currentPlayer!=player[i] && currPos+num < 56) {
+            var secondPawn=document.getElementById(currpawn);
+            if (firstPawn.style.top==secondPawn.style.top&&firstPawn.style.left==secondPawn.style.left&&currentPlayer!=player[i]&&currPos+num<44) {
                 count++;
                 toKill = player[i] + n;
                 return toKill;
