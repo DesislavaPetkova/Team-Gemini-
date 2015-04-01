@@ -770,7 +770,7 @@ function randomNum() {
 		diceInfoHolder = [num, playerIndex];
 		document.getElementById('badtext').style.opacity = '0';		
 		if(num!==6){			
-			document.getElementById('player').innerText = playersNames[playerIndex];
+			document.getElementById('player').innerText = playersNames[playerIndex]+': '+ num;
 			document.getElementById('player').style.color = roles[playerIndex];
 			document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
 			if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
@@ -788,7 +788,7 @@ function randomNum() {
 			window.setTimeout(backgroundDice, 1500);
 			return;
 		}		
-		document.getElementById('player').innerText = playersNames[playerIndex];
+		document.getElementById('player').innerText = playersNames[playerIndex]+': '+ num;
 		document.getElementById('player').style.color = roles[playerIndex];	
 		document.getElementById('player').style.fontFamily = fontsArr[playerIndex];
 		if (playerIndex==2) document.getElementById('player').style.fontSize = '1em';
