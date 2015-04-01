@@ -567,28 +567,41 @@ function placePawns(posX,posY){
 					playersTurn = false;
 					changeNames(playerIndex);					
 			} else {		
-					if(!playerInQuestion.status.saved && (!playerInQuestion.status.home)){
+					if(!playerInQuestion.status.saved || (!playerInQuestion.status.home)){
 						playerHasMoved=false;
 						var ini = routs[currPlayer].indexOf(playerInQuestion.tile);		
 						playersTurn = false;						
-						if((ini+diceValue)<=routs[currPlayer].length){							
-							playerInQuestion.status.score += diceValue;
-							var nextTile = routs[currPlayer][ini+diceValue];
-							checkIfThereIsPlayerOnTile(nextTile,currPlayer);
-							var currColmn, currRow, nextColmn, nextRow; 
-							var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);				
-							var coordOfNT = findCoordinates(nextTile, mapXY);															
-							playerInQuestion.x += (coordOfNT[1]-coordOfCT[1]);
-							playerInQuestion.y += (coordOfNT[0]-coordOfCT[0]);
-							playerInQuestion.width = tileWidth;							
-							playerInQuestion.tile =	nextTile;	
-							if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
-								playerInQuestion.status.saved = true;
+						if((ini+diceValue)<routs[currPlayer].length || (ini == 61)){	
+							if(ini == 61 || (ini+diceValue)== 61){
+								playerInQuestion.status.saved =true;
+								playerInQuestion.status.score = 62;	
+								var nextTile = routs[currPlayer][61];							
+								var currColmn, currRow, nextColmn, nextRow; 
+								var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);				
+								var coordOfNT = findCoordinates(nextTile, mapXY);															
+								playerInQuestion.x += (coordOfNT[1]-coordOfCT[1]);
+								playerInQuestion.y += (coordOfNT[0]-coordOfCT[0]);
+								playerInQuestion.width = tileWidth;							
+								playerInQuestion.tile =	nextTile;
+							} else{
+								playerInQuestion.status.score += diceValue;
+								var nextTile = routs[currPlayer][ini+diceValue];
+								checkIfThereIsPlayerOnTile(nextTile,currPlayer);
+								var currColmn, currRow, nextColmn, nextRow; 
+								var coordOfCT = findCoordinates(playerInQuestion.tile, mapXY);				
+								var coordOfNT = findCoordinates(nextTile, mapXY);															
+								playerInQuestion.x += (coordOfNT[1]-coordOfCT[1]);
+								playerInQuestion.y += (coordOfNT[0]-coordOfCT[0]);
+								playerInQuestion.width = tileWidth;							
+								playerInQuestion.tile =	nextTile;	
+								if(((ini+diceValue)===65) || ((ini+diceValue)===75) || ((ini+diceValue)===85) ||((ini+diceValue)===95)) {
+									playerInQuestion.status.saved = true;
+								}
+								playersTurn = false;
+								changeNames(playerIndex);
 							}
-							playersTurn = false;
-							changeNames(playerIndex);							
-						} else {
-							clicked = false;
+						} else {							
+							clicked = false;//true
 						}				
 					} else {						
 						clicked = false;
@@ -634,12 +647,13 @@ function changeNames(pi){
 
 var divScore = ['gscore', 'b1score', 'b2score', 'pscore'];
 function checkIfThereIsPlayerOnTile(nextTile,currPlayer){
+	if(nextTile){
 		for(var i in allPlayersArr){
 			if(i != currPlayer){
 				for(var j in allPlayersArr[i]){
 					var cPlayer = allPlayersArr[i][j];
 					if (cPlayer.tile == nextTile){
-						var c = cPlayer.homeIndex.toString();
+						var c = cPlayer.homeIndex;
 						cPlayer.x = homeSpotHolder[c][0];
 						cPlayer.y = homeSpotHolder[c][1];
 						cPlayer.status.home = true;
@@ -648,6 +662,8 @@ function checkIfThereIsPlayerOnTile(nextTile,currPlayer){
 				}
 			}
 		}	
+	}
+		
 }
 
 var mapXY = createValueMap();
@@ -769,7 +785,9 @@ var canvasClicked = 0;
 function randomNum() {	
 	for(var sc=0; sc<4; sc++){
 		var currScore = document.getElementById(divScore[sc]).innerText;
-		if(Number(currScore) >=248) {
+		var l = currScore.length;
+		var currScore = currScore.substr(0,l-6);
+		if(Number(currScore) >= 248) {
 			gameOn = false;
 			document.getElementById('badtext').innerText = 'Game Over./nThe round won' + playersNames[sc];
 		}
