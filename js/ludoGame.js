@@ -592,17 +592,17 @@ function placePawns(posX,posY){
 						}				
 					} else {						
 						clicked = false;
-						document.getElementById('badtext').innerText = '< Impossible Move >';
+						document.getElementById('badtext').innerHTML = '< Impossible Move >';
 						document.getElementById('badtext').style.opacity = '1';
 					}
 			}		
-		} else 	{document.getElementById('badtext').innerText = '< Impossible Move >';
+		} else 	{document.getElementById('badtext').innerHTML = '< Impossible Move >';
 				document.getElementById('badtext').style.opacity = '1';
 		}	
 		clicked = false;	
 	 } else	{
 		 if (posX && posY) {		 
-		 document.getElementById('badtext').innerText = 'Roll the Dice';
+		 document.getElementById('badtext').innerHTML = 'Roll the Dice';
 		 document.getElementById('badtext').style.opacity = '1';
 		} 		
 	 }
@@ -618,14 +618,14 @@ function placePawns(posX,posY){
 				upctx.drawImage(document.getElementById(play.img),play.x*tileWidth, play.y*tileWidth, tileWidth, tileWidth);
 				score += play.status.score;
 			});
-			document.getElementById(divScore[cArr]).innerText = score+' / 248';
+			document.getElementById(divScore[cArr]).innerHTML = score+' / 248';
 		};
 	}	
 	update();
 }
 
 function changeNames(pi){
-	document.getElementById('player').innerText = playersNames[pi];
+	document.getElementById('player').innerHTML = playersNames[pi];
 	document.getElementById('player').style.color = roles[pi];
 	document.getElementById('player').style.fontFamily = fontsArr[pi];
 	if (pi==2) document.getElementById('player').style.fontSize = '1em';
@@ -768,12 +768,12 @@ var canvasClicked = 0;
 
 function randomNum() {	
 	for(var sc=0; sc<4; sc++){
-		var currScore = document.getElementById(divScore[sc]).innerText;
+		var currScore = document.getElementById(divScore[sc]).innerHTML;
 		var l = currScore.length;
 		var currScore = currScore.substr(0,l-6);
 		if(Number(currScore) >=248) {
 			gameOn = false;
-			document.getElementById('badtext').innerText = 'Game Over./nThe round won' + playersNames[sc];
+			document.getElementById('badtext').innerHTML = 'Game Over./nThe round won' + playersNames[sc];
 		}
 	}	
 	document.getElementById('badtext').style.opacity = '0';
@@ -810,7 +810,7 @@ function backgroundDice(){
 }
 var num;
 function changeName(pi){
-	document.getElementById('player').innerText = playersNames[pi]+': '+ num;
+	document.getElementById('player').innerHTML = playersNames[pi]+': '+ num;
 	document.getElementById('player').style.color = roles[pi];
 	document.getElementById('player').style.fontFamily = fontsArr[pi];
 	if (pi==2) document.getElementById('player').style.fontSize = '1em';
